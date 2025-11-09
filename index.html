@@ -3,6 +3,15 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nowoczesny e-segregator HACCP od INOVIT - profesjonalna dokumentacja dla zakładów spożywczych">
+  <meta name="theme-color" content="#004F5D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="e-Segregator">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="apple-touch-icon" href="./icon-192.png">
   <title>INOVIT – e-Segregator</title>
   <style>
     body {
@@ -42,6 +51,44 @@
     }
     button:hover {
       background-color: #0097a9;
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+    /* Responsywność */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 24px;
+      }
+      header p {
+        font-size: 12px;
+      }
+      main {
+        padding: 60px 20px;
+      }
+      main h2 {
+        font-size: 22px;
+      }
+      main p {
+        font-size: 16px;
+      }
+      button {
+        font-size: 1em;
+        padding: 12px 25px;
+      }
+    }
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 20px;
+      }
+      main {
+        padding: 40px 15px;
+      }
+      main h2 {
+        font-size: 20px;
+      }
+      main p {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -55,5 +102,53 @@
     <p>To nie jest kolejny segregator – to cyfrowa precyzja, której potrzebuje Twój Zakład.</p>
     <button onclick="location.href='centrum.html'">START</button>
   </main>
+  <script>
+    // Rejestracja Service Workera
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then((registration) => {
+            console.log('Service Worker zarejestrowany:', registration.scope);
+
+            // Sprawdź czy jest aktualizacja
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              console.log('Znaleziono nową wersję Service Workera');
+
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Nowa wersja dostępna - możesz pokazać powiadomienie użytkownikowi
+                  console.log('Nowa wersja aplikacji jest dostępna!');
+                  if (confirm('Dostępna jest nowa wersja aplikacji. Odświeżyć teraz?')) {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          })
+          .catch((error) => {
+            console.error('Błąd rejestracji Service Workera:', error);
+          });
+      });
+
+      // Automatyczne odświeżenie gdy nowy SW przejmie kontrolę
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+    }
+
+    // Prompt instalacji PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('Aplikacja gotowa do instalacji jako PWA');
+    });
+  </script>
 </body>
 </html>
