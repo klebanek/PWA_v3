@@ -1,0 +1,264 @@
+/* ===== INOVIT e-Segregator - Main Styles ===== */
+
+:root {
+  --primary-color: #004F5D;
+  --secondary-color: #007380;
+  --accent-color: #0097a9;
+  --light-text: #A0D2D8;
+  --bg-color: #f5f5f5;
+  --white: #ffffff;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Header Styles ===== */
+header {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--light-text);
+}
+
+/* ===== Main Content ===== */
+main {
+  flex: 1;
+  padding: 40px 20px;
+}
+
+main h2 {
+  color: var(--primary-color);
+  margin-bottom: 0.5em;
+  font-size: 24px;
+}
+
+main p {
+  font-size: 18px;
+  color: var(--primary-color);
+  margin-bottom: 2em;
+  line-height: 1.6;
+}
+
+/* ===== Buttons ===== */
+button, .btn {
+  font-size: 1.2em;
+  padding: 15px 30px;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+button:active, .btn:active {
+  transform: translateY(0);
+}
+
+/* ===== Tiles Grid (for centrum.html) ===== */
+.tiles-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tile {
+  background-color: var(--secondary-color);
+  color: var(--white);
+  padding: 20px;
+  width: 250px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.tile:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-3px);
+}
+
+/* ===== Links ===== */
+.back-link {
+  display: block;
+  margin: 20px auto;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--accent-color);
+}
+
+/* ===== Footer ===== */
+footer {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 15px;
+  font-size: 12px;
+  margin-top: auto;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== PWA Install Button ===== */
+#installBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 1000;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+#installBtn:hover {
+  background-color: var(--accent-color);
+}
+
+/* ===== Offline Indicator ===== */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  z-index: 9999;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+  transform: translateY(0);
+}
+
+.online-indicator {
+  background-color: #51cf66;
+}
+
+/* ===== Content Section ===== */
+.content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: left;
+}
+
+.content-section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.content-section ul {
+  list-style-position: inside;
+  line-height: 2;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 24px;
+  }
+
+  header p {
+    font-size: 12px;
+  }
+
+  main {
+    padding: 20px 10px;
+  }
+
+  main h2 {
+    font-size: 20px;
+  }
+
+  main p {
+    font-size: 16px;
+  }
+
+  .tile {
+    width: calc(100% - 20px);
+    max-width: 300px;
+  }
+
+  button, .btn {
+    font-size: 1em;
+    padding: 12px 24px;
+  }
+
+  #installBtn {
+    bottom: 10px;
+    right: 10px;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tiles-grid {
+    padding: 10px;
+    gap: 10px;
+  }
+}
