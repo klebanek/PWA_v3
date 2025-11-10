@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - claude/test-pwa-v3-fixed-011CUyYNYhMD3cCTqqrKZEcB
+      - '**'  # Deploy on push to any branch
   workflow_dispatch:
 
 permissions:
