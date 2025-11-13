@@ -1,11 +1,12 @@
 // Service Worker for Wędliny z Tradycją - System HACCP
-const CACHE_VERSION = 'v1.6.0';
+const CACHE_VERSION = 'v1.7.0';
 const CACHE_NAME = `wedliny-z-tradycja-zm-${CACHE_VERSION}`;
 
 // Files to cache
 const urlsToCache = [
   './',
   './index.html',
+  './login.html',
   './centrum.html',
   './wprowadzenie.html',
   './opis_zakladu.html',
