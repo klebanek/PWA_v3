@@ -311,6 +311,9 @@
       <button class="tab-button" onclick="switchTab('temperatury')">
         REJESTR TEMPERATUR POMIESZCZEŃ
       </button>
+      <button class="tab-button" onclick="switchTab('uppz')">
+        REJESTR PRZEKAZANIA UPPZ
+      </button>
     </div>
 
     <!-- Registry 1: Dostaw surowca mięsnego -->
@@ -554,6 +557,88 @@
       </div>
     </div>
 
+    <!-- Registry 3: UPPZ (Kategoria 3) -->
+    <div id="registry-uppz" class="registry-section">
+      <h3>REJESTR PRZEKAZANIA UPPZ (KATEGORIA 3)</h3>
+
+      <div class="form-container">
+        <h4>Dodaj wpis</h4>
+        <form id="uppzForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataPrzekazania">Data przekazania</label>
+              <input type="date" id="dataPrzekazania" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="rodzajOdpadow">Rodzaj odpadów</label>
+              <input type="text" id="rodzajOdpadow" placeholder="np. Odpady z rozbioru" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="iloscUppz">Ilość (kg)</label>
+              <input type="number" id="iloscUppz" step="0.01" min="0" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="odbiorcaNazwa">Odbiorca - nazwa</label>
+              <input type="text" id="odbiorcaNazwa" placeholder="Nazwa firmy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="odbiorcanrZatwierdzenia">Odbiorca - nr zatwierdzenia</label>
+              <input type="text" id="odbiorcaNrZatwierdzenia" placeholder="Nr zatwierdzenia" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nrDokumentu">Nr dokumentu transportowego</label>
+              <input type="text" id="nrDokumentu" placeholder="Nr dokumentu" required>
+            </div>
+
+            <div class="form-group">
+              <label for="uwagiUppz">Uwagi</label>
+              <textarea id="uwagiUppz" placeholder="Opcjonalne uwagi..."></textarea>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpisUppz">Podpis osoby odpowiedzialnej</label>
+              <input type="text" id="podpisUppz" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearUppzForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportUppzToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data przekazania</th>
+              <th>Rodzaj odpadów</th>
+              <th>Ilość (kg)</th>
+              <th>Odbiorca (nazwa, nr zatwierdzenia)</th>
+              <th>Nr dokumentu transportowego</th>
+              <th>Uwagi</th>
+              <th>Podpis osoby odpowiedzialnej</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="uppzTableBody">
+            <tr class="empty-state">
+              <td colspan="9">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
   </main>
 
@@ -564,6 +649,7 @@
     // Storage keys
     const DELIVERY_STORAGE_KEY = 'zm_surowiec_registry';
     const TEMPERATURE_STORAGE_KEY = 'zm_temperature_registry';
+    const UPPZ_STORAGE_KEY = 'zm_uppz_registry';
 
     // Tab switching
     function switchTab(tabName) {
@@ -580,6 +666,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       loadDeliveryRegistry();
       loadTemperatureRegistry();
+      loadUppzRegistry();
       setupDeliveryValidation();
     });
 
@@ -824,6 +911,98 @@
       });
 
       downloadCSV(csv, 'rejestr_temperatur');
+    }
+
+    // ===== UPPZ REGISTRY =====
+    document.getElementById('uppzForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        dataPrzekazania: document.getElementById('dataPrzekazania').value,
+        rodzajOdpadow: document.getElementById('rodzajOdpadow').value,
+        ilosc: document.getElementById('iloscUppz').value,
+        odbiorcaNazwa: document.getElementById('odbiorcaNazwa').value,
+        odbiorcaNrZatwierdzenia: document.getElementById('odbiorcaNrZatwierdzenia').value,
+        nrDokumentu: document.getElementById('nrDokumentu').value,
+        uwagi: document.getElementById('uwagiUppz').value,
+        podpis: document.getElementById('podpisUppz').value,
+        timestamp: new Date().toISOString()
+      };
+
+      saveUppzEntry(formData);
+      clearUppzForm();
+      loadUppzRegistry();
+      alert('Wpis UPPZ został dodany pomyślnie!');
+    });
+
+    function saveUppzEntry(entry) {
+      let registry = getUppzRegistry();
+      registry.push(entry);
+      localStorage.setItem(UPPZ_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getUppzRegistry() {
+      const data = localStorage.getItem(UPPZ_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadUppzRegistry() {
+      const registry = getUppzRegistry();
+      const tbody = document.getElementById('uppzTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="9">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        const odbiorca = `${escapeHtml(entry.odbiorcaNazwa)}, ${escapeHtml(entry.odbiorcaNrZatwierdzenia)}`;
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataPrzekazania)}</td>
+          <td>${escapeHtml(entry.rodzajOdpadow)}</td>
+          <td>${parseFloat(entry.ilosc).toFixed(2)}</td>
+          <td>${odbiorca}</td>
+          <td>${escapeHtml(entry.nrDokumentu)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deleteUppzEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteUppzEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getUppzRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(UPPZ_STORAGE_KEY, JSON.stringify(registry));
+        loadUppzRegistry();
+      }
+    }
+
+    function clearUppzForm() {
+      document.getElementById('uppzForm').reset();
+    }
+
+    function exportUppzToCSV() {
+      const registry = getUppzRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data przekazania,Rodzaj odpadów,Ilość (kg),Odbiorca - nazwa,Odbiorca - nr zatwierdzenia,Nr dokumentu transportowego,Uwagi,Podpis\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataPrzekazania}","${entry.rodzajOdpadow}",${entry.ilosc},"${entry.odbiorcaNazwa}","${entry.odbiorcaNrZatwierdzenia}","${entry.nrDokumentu}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_uppz');
     }
 
     // ===== UTILITY FUNCTIONS =====
