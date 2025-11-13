@@ -1,4 +1,4 @@
-// INOVIT e-Segregator PWA - Main App Logic
+// Wędliny z Tradycją - System HACCP PWA
 
 let deferredPrompt;
 let installBtn;
@@ -422,7 +422,7 @@ document.addEventListener('mouseover', (e) => {
 });
 
 // Log PWA capabilities
-console.log('📱 INOVIT e-Segregator PWA initialized');
+console.log('📱 Wędliny z Tradycją - System HACCP PWA initialized');
 console.log('Service Worker support:', 'serviceWorker' in navigator);
 console.log('Notification support:', 'Notification' in window);
 console.log('Push support:', 'PushManager' in window);

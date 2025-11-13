@@ -7,32 +7,386 @@
   <meta name="theme-color" content="#007380">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="e-Segregator">
+  <meta name="apple-mobile-web-app-title" content="HACCP ZM">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Analiza Zagrożeń HACCP - e-Segregator INOVIT</title>
+  <title>Analiza Zagrożeń HACCP - Wędliny z Tradycją</title>
+  <style>
+    .hazard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 0.85rem;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .hazard-table thead {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .hazard-table th {
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hazard-table th:last-child {
+      border-right: none;
+    }
+
+    .hazard-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(0, 115, 128, 0.1);
+      border-right: 1px solid rgba(0, 115, 128, 0.05);
+      vertical-align: top;
+    }
+
+    .hazard-table td:last-child {
+      border-right: none;
+    }
+
+    .hazard-table tbody tr:hover {
+      background: rgba(0, 229, 255, 0.05);
+    }
+
+    .hazard-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .hazard-type-bio {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    .hazard-type-chem {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .hazard-type-phys {
+      color: #8b5cf6;
+      font-weight: 600;
+    }
+
+    .ccp-highlight {
+      background: rgba(34, 197, 94, 0.1);
+      font-weight: 700;
+      color: #16a34a;
+      text-align: center;
+    }
+
+    .decision-yes {
+      text-align: center;
+      font-weight: 600;
+      color: #16a34a;
+    }
+
+    .decision-no {
+      text-align: center;
+      font-weight: 600;
+      color: #dc2626;
+    }
+
+    .decision-na {
+      text-align: center;
+      color: #999;
+    }
+
+    .summary-box {
+      background: rgba(0, 229, 255, 0.05);
+      border-left: 4px solid var(--accent-color);
+      padding: 20px;
+      margin: 30px 0;
+      border-radius: 8px;
+    }
+
+    .summary-box h3 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+
+    .summary-box strong {
+      color: #16a34a;
+    }
+
+    @media (max-width: 768px) {
+      .hazard-table {
+        font-size: 0.75rem;
+      }
+
+      .hazard-table th,
+      .hazard-table td {
+        padding: 6px 4px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>INOVIT</h1>
-    <p>PROFESJONALNA DOKUMENTACJA – NOWOCZESNE ROZWIĄZANIA</p>
+    <h1>Wędliny z Tradycją</h1>
+    <p>SYSTEM HACCP – DOKUMENTACJA ZAKŁADU MIĘSNEGO</p>
   </header>
+
   <main class="content-section">
-    <h2>Analiza Zagrożeń HACCP</h2>
-    <h3>Identyfikacja zagrożeń</h3>
-    <p>Kompleksowa analiza potencjalnych zagrożeń w procesie produkcyjnym:</p>
+    <h2>III. ANALIZA ZAGROŻEŃ I IDENTYFIKACJA KRYTYCZNYCH PUNKTÓW KONTROLI (CCP)</h2>
+
+    <h3>1. Cel analizy zagrożeń</h3>
+    <p>Analiza zagrożeń ma na celu identyfikację oraz ocenę potencjalnych zagrożeń biologicznych, chemicznych i fizycznych występujących w procesie produkcyjnym, co umożliwia wyznaczenie Krytycznych Punktów Kontroli (CCP) oraz wdrożenie odpowiednich środków kontroli.</p>
+
+    <h3>2. Rodzaje zagrożeń</h3>
+
+    <h4>2.1. Zagrożenia biologiczne</h4>
     <ul>
-      <li><strong>Zagrożenia biologiczne</strong> - bakterie, wirusy, pasożyty</li>
-      <li><strong>Zagrożenia chemiczne</strong> - pestycydy, metale ciężkie, alergeny</li>
-      <li><strong>Zagrożenia fizyczne</strong> - ciała obce, szkło, metal</li>
+      <li>Obecność patogenów (np. <em>Salmonella</em>, <em>Listeria monocytogenes</em>, <em>E. coli</em>).</li>
+      <li>Rozwój pleśni i drożdży na surowcach i gotowych produktach.</li>
+      <li>Zanieczyszczenie krzyżowe między surowcami a produktami gotowymi.</li>
     </ul>
-    <h3>Krytyczne Punkty Kontroli (CCP)</h3>
-    <p>Określenie punktów w procesie, gdzie można zapobiec lub wyeliminować zagrożenie.</p>
+
+    <h4>2.2. Zagrożenia chemiczne</h4>
+    <ul>
+      <li>Pozostałości środków czystości i dezynfekcyjnych.</li>
+      <li>Migracja substancji chemicznych z opakowań do żywności.</li>
+      <li>Kontaminacja alergenami (np. soja, gluten, mleko).</li>
+    </ul>
+
+    <h4>2.3. Zagrożenia fizyczne</h4>
+    <ul>
+      <li>Obecność ciał obcych (np. kawałki metalu, szkła, plastiku).</li>
+      <li>Zanieczyszczenie wynikające z elementów maszyn (np. śruby, wióry).</li>
+      <li>Ryzyko dostania się fragmentów odzieży ochronnej do produktu.</li>
+    </ul>
+
+    <h3>3. Przebieg analizy zagrożeń</h3>
+    <ol>
+      <li>Sporządzenie szczegółowego diagramu procesu produkcyjnego (od przyjęcia surowca, przez przetwarzanie, pakowanie, aż po dystrybucję).</li>
+      <li>Identyfikacja potencjalnych zagrożeń na każdym etapie procesu.</li>
+      <li>Ocena ryzyka na podstawie opisu potencjalnych zagrożeń, odpowiedzi na pytania drzewa decyzyjnego i w efekcie identyfikacja ewentualnych krytycznych punktów kontroli na danym etapie.</li>
+      <li>Określenie środków zapobiegawczych minimalizujących ryzyko wystąpienia zagrożenia.</li>
+    </ol>
+
+    <h3>4. Krytyczne Punkty Kontroli (CCP)</h3>
+
+    <h4>4.1. Identyfikacja CCP</h4>
+    <p>Na podstawie analizy zagrożeń wyznaczane są krytyczne punkty kontroli (CCP), czyli etapy, w których kontrola parametrów pozwala na eliminację lub redukcję ryzyka do akceptowalnego poziomu.</p>
+
+    <h4>Tabela analizy zagrożeń i krytycznych punktów kontroli</h4>
+
+    <div class="table-container">
+      <table class="hazard-table">
+        <thead>
+          <tr>
+            <th style="width: 3%;">L.p.</th>
+            <th style="width: 15%;">Etap produkcji</th>
+            <th style="width: 15%;">Zagrożenie</th>
+            <th style="width: 10%;">Rodzaj zagrożenia</th>
+            <th style="width: 27%;">Środki zapobiegawcze</th>
+            <th colspan="4" style="text-align: center;">Drzewo decyzyjne</th>
+            <th style="width: 5%;">Nr CCP</th>
+          </tr>
+          <tr>
+            <th colspan="5"></th>
+            <th style="width: 5%;">Pyt. 1</th>
+            <th style="width: 5%;">Pyt. 2</th>
+            <th style="width: 5%;">Pyt. 3</th>
+            <th style="width: 5%;">Pyt. 4</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Przyjęcie surowców mięsnych i kontrola jakości</td>
+            <td>Wzrost mikroflory patogennej</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Kontrola temperatury (półtusze ≤7°C, podroby ≤3°C, mięso drobiowe ≤4°C), kontrola wizualna, weryfikacja dokumentów dostawców</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Magazynowanie surowców w chłodni surowca</td>
+            <td>Rozwój drobnoustrojów</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Regularny monitoring temperatury (0-4°C), stosowanie FIFO</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Rozbiór półtusz i wykrawanie elementów</td>
+            <td>Zanieczyszczenie krzyżowe</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Przestrzeganie zasad higieny sprzętu, stanowisk pracy i procedur GHP</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Klasyfikacja mięsa do produkcji i mięsa handlowego</td>
+            <td>Zanieczyszczenie krzyżowe</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Dokładna segregacja produktów, utrzymanie czystości sprzętu</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Peklowanie mięsa</td>
+            <td>Nieodpowiednia koncentracja solanki, rozwój drobnoustrojów</td>
+            <td><span class="hazard-type-chem">Chemiczne</span>, <span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Kontrola stężenia soli peklującej, przestrzeganie czasu peklowania oraz temperatury (0-8°C)</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Rozdrabnianie mięsa</td>
+            <td>Zanieczyszczenia fizyczne (fragmenty sprzętu)</td>
+            <td><span class="hazard-type-phys">Fizyczne</span></td>
+            <td>Regularny serwis urządzeń, bieżąca kontrola wizualna</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Przygotowanie farszu, mieszanie z przyprawami</td>
+            <td>Zanieczyszczenie mikrobiologiczne</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Zachowanie higieny stanowisk pracy, wizualna kontrola jakości składników</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Nadziewanie farszu w osłonki naturalne</td>
+            <td>Zanieczyszczenie mikrobiologiczne</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Kontrola czystości osłonek, utrzymanie sprzętu w czystości</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr style="background: rgba(34, 197, 94, 0.05);">
+            <td>9</td>
+            <td><strong>Obróbka termiczna (wędzenie, parzenie, pieczenie)</strong></td>
+            <td><strong>Przeżycie mikroorganizmów patogennych</strong></td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td><strong>Monitorowanie temperatury wewnątrz produktu (≥68°C), kontrola czasu obróbki</strong></td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="ccp-highlight">1</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Schładzanie wyrobów</td>
+            <td>Rekontaminacja mikrobiologiczna</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Zapewnienie higienicznych warunków chłodzenia, kontrola temperatury końcowej (20-30°C)</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Magazynowanie wędlin</td>
+            <td>Rozwój drobnoustrojów</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Regularny monitoring temperatury chłodni (≤8°C), stosowanie FIFO</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Pakowanie wyrobów</td>
+            <td>Zanieczyszczenie mikrobiologiczne, nieszczelność opakowań</td>
+            <td><span class="hazard-type-bio">Biologiczne</span>, <span class="hazard-type-phys">Fizyczne</span></td>
+            <td>Kontrola szczelności opakowań, zachowanie wysokiej higieny stanowisk pracy</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>Sprzedaż końcowemu klientowi</td>
+            <td>Wzrost drobnoustrojów w przypadku przerwania łańcucha chłodniczego</td>
+            <td><span class="hazard-type-bio">Biologiczne</span></td>
+            <td>Ciągłe monitorowanie temperatury w ladzie chłodniczej, odpowiednia rotacja produktów</td>
+            <td class="decision-yes">Tak</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-no">Nie</td>
+            <td class="decision-na">-</td>
+            <td class="decision-na">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Drzewo decyzyjne</h4>
+    <p><strong>Pytania drzewa decyzyjnego służące do identyfikacji CCP:</strong></p>
+    <ol>
+      <li><strong>Pytanie 1:</strong> Czy istnieją środki zapobiegawcze dla zidentyfikowanego zagrożenia?</li>
+      <li><strong>Pytanie 2:</strong> Czy etap został zaprojektowany w celu wyeliminowania lub zredukowania zagrożenia do akceptowalnego poziomu?</li>
+      <li><strong>Pytanie 3:</strong> Czy zanieczyszczenie może nastąpić na poziomie przekraczającym dopuszczalny lub może wzrosnąć do nieakceptowalnego poziomu?</li>
+      <li><strong>Pytanie 4:</strong> Czy następny etap może wyeliminować lub zredukować zagrożenie do akceptowalnego poziomu?</li>
+    </ol>
+
+    <div class="summary-box">
+      <h3>Podsumowanie analizy zagrożeń i krytycznych punktów kontroli</h3>
+      <p>Na podstawie przeprowadzonej analizy zagrożeń oraz krytycznych punktów kontroli, zidentyfikowano <strong>krytyczny punkt kontroli (CCP) na etapie obróbki termicznej</strong>.</p>
+      <p>Rejestracja kontroli temperatury podczas przeprowadzanych procesów obróbki termicznej produktów w Zakładzie, będzie prowadzona za pomocą rejestru, którego wzór został opracowany i przedstawiony w rozdziale XII. Rejestry i zapisy.</p>
+      <p><strong>CCP 1 – Obróbka termiczna:</strong> Temperatura wewnętrzna produktu musi osiągnąć minimum <strong>68°C</strong>, aby zapewnić eliminację mikroorganizmów patogennych.</p>
+    </div>
+
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
   </main>
-  <footer>INOVIT © 2025</footer>
+
+  <footer>Wędliny z Tradycją © 2025</footer>
   <script src="app.js"></script>
 </body>
 </html>
