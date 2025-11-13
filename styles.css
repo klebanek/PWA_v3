@@ -125,125 +125,29 @@ button:active, .btn:active {
   margin: 0 auto;
 }
 
-/* 3D Flip Card */
-.flip-card {
-  perspective: 1000px;
-  height: 200px;
-  min-width: 280px;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front,
-.flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 25px;
-  box-shadow: var(--shadow);
-}
-
-/* Front of card */
-.flip-card-front {
+.tile {
   background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
   color: var(--white);
+  padding: 30px 25px;
+  min-height: 120px;
+  border-radius: 15px;
   text-transform: uppercase;
   font-weight: bold;
   font-size: 16px;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-}
-
-.tile-icon {
-  font-size: 48px;
-  margin-bottom: 15px;
-  display: block;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-/* Back of card */
-.flip-card-back {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  color: var(--white);
-  transform: rotateY(180deg);
-  gap: 15px;
-}
-
-.flip-card-back h3 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: bold;
-  color: var(--white);
-}
-
-.flip-card-back p {
-  margin: 0;
-  font-size: 14px;
-  opacity: 0.9;
-  line-height: 1.5;
-  color: var(--white);
-}
-
-.flip-btn {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--white);
-  text-decoration: none;
-  border-radius: 25px;
-  font-weight: bold;
-  font-size: 14px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.flip-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-/* Hover effect for flip card */
-.flip-card:hover .flip-card-front {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Legacy tile class for compatibility */
-.tile {
-  background-color: var(--secondary-color);
-  color: var(--white);
-  padding: 20px;
-  width: 100%;
-  border-radius: 10px;
-  text-transform: uppercase;
-  font-weight: bold;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  line-height: 1.4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow);
 }
 
 .tile:hover {
-  background-color: var(--accent-color);
-  transform: translateY(-3px);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* ===== Links ===== */
@@ -659,8 +563,9 @@ button:active, .btn:active {
     padding: 60px 40px;
   }
 
-  .flip-card {
-    height: 220px;
+  .tile {
+    min-height: 140px;
+    font-size: 17px;
   }
 
   header h1 {
@@ -684,8 +589,8 @@ button:active, .btn:active {
     gap: 25px;
   }
 
-  .flip-card {
-    height: 200px;
+  .tile {
+    min-height: 130px;
   }
 }
 
@@ -697,26 +602,10 @@ button:active, .btn:active {
     padding: 30px 20px;
   }
 
-  .flip-card {
-    height: 180px;
-  }
-
-  .flip-card-front {
-    font-size: 14px;
-    padding: 20px;
-  }
-
-  .tile-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-
-  .flip-card-back h3 {
-    font-size: 20px;
-  }
-
-  .flip-card-back p {
-    font-size: 13px;
+  .tile {
+    min-height: 110px;
+    font-size: 15px;
+    padding: 25px 20px;
   }
 
   header h1 {
@@ -748,36 +637,10 @@ button:active, .btn:active {
     max-width: 500px;
   }
 
-  .flip-card {
-    height: 160px;
-    max-width: 100%;
-  }
-
-  .flip-card-front {
+  .tile {
+    min-height: 100px;
     font-size: 14px;
-    padding: 15px;
-  }
-
-  .tile-icon {
-    font-size: 36px;
-    margin-bottom: 8px;
-  }
-
-  .flip-card-back {
-    padding: 20px;
-  }
-
-  .flip-card-back h3 {
-    font-size: 18px;
-  }
-
-  .flip-card-back p {
-    font-size: 12px;
-  }
-
-  .flip-btn {
-    padding: 8px 16px;
-    font-size: 13px;
+    padding: 25px 20px;
   }
 
   header {
@@ -854,26 +717,10 @@ button:active, .btn:active {
     gap: 15px;
   }
 
-  .flip-card {
-    height: 150px;
-  }
-
-  .flip-card-front {
+  .tile {
+    min-height: 90px;
     font-size: 13px;
-    padding: 12px;
-  }
-
-  .tile-icon {
-    font-size: 32px;
-    margin-bottom: 6px;
-  }
-
-  .flip-card-back h3 {
-    font-size: 16px;
-  }
-
-  .flip-card-back p {
-    font-size: 11px;
+    padding: 20px 15px;
   }
 
   header h1 {
@@ -927,33 +774,9 @@ button:active, .btn:active {
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
-  .flip-card-inner {
-    transition: transform 0.6s ease;
-  }
-
-  /* Make flip cards tap-friendly */
-  .flip-card {
-    cursor: pointer;
-  }
-
   /* Larger touch targets */
-  button, .btn, .flip-btn {
+  button, .btn {
     min-height: 44px;
     min-width: 44px;
-  }
-
-  /* Disable hover animations on touch */
-  .tile:hover,
-  .flip-card:hover .flip-card-front {
-    transform: none;
-    box-shadow: var(--shadow);
-  }
-}
-
-/* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .tile-icon {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 }
