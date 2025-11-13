@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Logowanie do systemu HACCP">
+  <meta name="theme-color" content="#030712">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HACCP ZM">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <title>Logowanie - Wędliny z Tradycją</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #030712 0%, #0A2332 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background grid */
+    .background-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(50px, 50px);
+      }
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.3;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .orb-1 {
+      width: 300px;
+      height: 300px;
+      background: #00E5FF;
+      top: 10%;
+      left: 10%;
+      animation: float1 15s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 250px;
+      height: 250px;
+      background: #007380;
+      bottom: 15%;
+      right: 10%;
+      animation: float2 18s ease-in-out infinite;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: #004F5D;
+      top: 50%;
+      left: 50%;
+      animation: float3 12s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(50px, -50px); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-40px, 40px); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(calc(-50% + 30px), calc(-50% - 30px)); }
+    }
+
+    /* Login container */
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 450px;
+      background: rgba(10, 35, 50, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .logo-dot {
+      color: #00E5FF;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #00E5FF, #007380);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .title {
+      font-size: 1.3rem;
+      color: white;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 30px;
+    }
+
+    .form-label {
+      display: block;
+      color: #00E5FF;
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 229, 255, 0.2);
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #00E5FF;
+      box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Button */
+    .login-button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #00E5FF, #007380);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 1px;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 229, 255, 0.4);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+    }
+
+    .login-button.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .login-button .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    .login-button.loading .spinner {
+      display: block;
+    }
+
+    .login-button.loading .button-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Error message */
+    .error-message {
+      display: none;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    /* Footer */
+    .login-footer {
+      text-align: center;
+      margin-top: 30px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 40px 25px;
+      }
+
+      .logo {
+        font-size: 2rem;
+      }
+
+      .title {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(0);
+      animation: ripple-animation 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="background-grid"></div>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Login container -->
+  <div class="login-container">
+    <div class="logo-section">
+      <div class="logo">INOVIT<span class="logo-dot">.</span></div>
+      <div class="badge">SYSTEM HACCP</div>
+      <h1 class="title">Wędliny z Tradycją</h1>
+      <p class="subtitle">Dokumentacja Zakładu Mięsnego</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label" for="password">Wprowadź hasło dostępu</label>
+        <input
+          type="password"
+          id="password"
+          class="form-input"
+          placeholder="••••••••"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="login-button">
+        <span class="button-text">ZALOGUJ</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="error-message" id="errorMessage">
+        Nieprawidłowe hasło. Spróbuj ponownie.
+      </div>
+    </form>
+
+    <div class="login-footer">
+      Wędliny z Tradycją © 2025
+    </div>
+  </div>
+
+  <script>
+    // Password configuration (change this password as needed)
+    // Current password: "wedliny2025" (encoded in base64)
+    const ENCODED_PASSWORD = 'd2VkbGlueTIwMjU='; // Base64 encoded
+
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('password');
+    const loginButton = document.querySelector('.login-button');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Check if already logged in
+    if (sessionStorage.getItem('haccp_authenticated') === 'true') {
+      window.location.href = 'centrum.html';
+    }
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Hide error message
+      errorMessage.classList.remove('show');
+
+      // Show loading state
+      loginButton.classList.add('loading');
+
+      // Simulate authentication delay
+      setTimeout(() => {
+        const enteredPassword = passwordInput.value;
+        const encodedInput = btoa(enteredPassword);
+
+        if (encodedInput === ENCODED_PASSWORD) {
+          // Success - set session and redirect
+          sessionStorage.setItem('haccp_authenticated', 'true');
+          window.location.href = 'centrum.html';
+        } else {
+          // Error - show message
+          loginButton.classList.remove('loading');
+          errorMessage.classList.add('show');
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      }, 800);
+    });
+
+    // Ripple effect on button click
+    loginButton.addEventListener('click', function(e) {
+      const rect = this.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+
+      this.appendChild(ripple);
+
+      setTimeout(() => ripple.remove(), 600);
+    });
+
+    // Remove error message on typing
+    passwordInput.addEventListener('input', function() {
+      errorMessage.classList.remove('show');
+    });
+  </script>
+</body>
+</html>

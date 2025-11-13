@@ -3,37 +3,1509 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Rejestry i zapisy HACCP">
+  <meta name="description" content="Rejestry HACCP">
   <meta name="theme-color" content="#007380">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="e-Segregator">
+  <meta name="apple-mobile-web-app-title" content="HACCP ZM">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Rejestry i Zapisy - e-Segregator INOVIT</title>
+  <title>Rejestry HACCP - Wędliny z Tradycją</title>
+  <style>
+    /* Tabs Navigation */
+    .tabs-container {
+      background: rgba(0, 79, 93, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px;
+      margin: 30px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-button {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 115, 128, 0.3);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .tab-button:hover {
+      border-color: var(--accent-color);
+      background: rgba(0, 229, 255, 0.1);
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .registry-section {
+      display: none;
+    }
+
+    .registry-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .registry-container {
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .form-container {
+      background: rgba(0, 79, 93, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px 0;
+      box-shadow: 0 8px 32px rgba(0, 229, 255, 0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px;
+      border: 2px solid rgba(0, 115, 128, 0.3);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-group.required label::after {
+      content: " *";
+      color: #ff4444;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 115, 128, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 79, 93, 0.1);
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 79, 93, 0.2);
+    }
+
+    .registry-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .registry-table thead {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .registry-table th {
+      padding: 15px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .registry-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(0, 115, 128, 0.1);
+      font-size: 0.9rem;
+    }
+
+    .registry-table tbody tr:hover {
+      background: rgba(0, 229, 255, 0.05);
+    }
+
+    .result-positive {
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .result-negative {
+      color: #ef4444;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 5px 10px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .temp-room-section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 115, 128, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .temp-room-section h4 {
+      color: var(--accent-color);
+      margin: 0 0 15px 0;
+      font-size: 1rem;
+    }
+
+    .temp-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    @media print {
+      .form-container,
+      .btn-container,
+      .action-btn,
+      header,
+      footer,
+      .back-link,
+      .tabs-container {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .registry-table th,
+      .registry-table td {
+        padding: 8px 5px;
+        font-size: 0.8rem;
+      }
+
+      .tab-button {
+        min-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>INOVIT</h1>
-    <p>PROFESJONALNA DOKUMENTACJA – NOWOCZESNE ROZWIĄZANIA</p>
+    <h1>Wędliny z Tradycją</h1>
+    <p>SYSTEM HACCP – DOKUMENTACJA ZAKŁADU MIĘSNEGO</p>
   </header>
+
   <main class="content-section">
-    <h2>Rejestry i Zapisy</h2>
-    <p>Dokumentacja obejmująca systematyczne zapisy z monitoringu i kontroli:</p>
-    <ul>
-      <li>Rejestry temperatury przechowywania</li>
-      <li>Zapisy z pomiarów CCP</li>
-      <li>Dokumentacja przyjęcia surowców</li>
-      <li>Karty kontroli jakości produktu</li>
-      <li>Rejestry czyszczenia i dezynfekcji</li>
-      <li>Zapisy z kontroli szkodników</li>
-    </ul>
-    <p>Wszystkie rejestry są prowadzone zgodnie z wymogami systemu HACCP i przechowywane przez okres wymagany prawem.</p>
+    <h2>REJESTRY I ZAPISY HACCP</h2>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <button class="tab-button active" onclick="switchTab('surowce')">
+        REJESTR DOSTAW SUROWCA
+      </button>
+      <button class="tab-button" onclick="switchTab('temperatury')">
+        REJESTR TEMPERATUR POMIESZCZEŃ
+      </button>
+      <button class="tab-button" onclick="switchTab('uppz')">
+        REJESTR PRZEKAZANIA UPPZ
+      </button>
+      <button class="tab-button" onclick="switchTab('opakowania')">
+        REJESTR DOSTAW OPAKOWAŃ
+      </button>
+      <button class="tab-button" onclick="switchTab('ccp1')">
+        REJESTR CCP1 - OBRÓBKA TERMICZNA
+      </button>
+    </div>
+
+    <!-- Registry 1: Dostaw surowca mięsnego -->
+    <div id="registry-surowce" class="registry-section active">
+      <h3>REJESTR DOSTAW SUROWCA MIĘSNEGO</h3>
+
+      <div class="form-container">
+        <h4>Dodaj nowy wpis</h4>
+        <form id="deliveryForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataDostawy">Data dostawy</label>
+              <input type="date" id="dataDostawy" name="dataDostawy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nazwaDostawcy">Nazwa dostawcy</label>
+              <input type="text" id="nazwaDostawcy" placeholder="Wprowadź nazwę dostawcy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nazwaSurowca">Nazwa surowca</label>
+              <input type="text" id="nazwaSurowca" placeholder="np. Półtusze wieprzowe" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="ilosc">Ilość [kg]</label>
+              <input type="number" id="ilosc" step="0.01" min="0" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="numerPartii">Numer partii</label>
+              <input type="text" id="numerPartii" placeholder="Wprowadź numer partii" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="numerHDI">Numer HDI</label>
+              <input type="text" id="numerHDI" placeholder="Wprowadź numer HDI" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="wynikiKontroli">Wyniki kontroli</label>
+              <select id="wynikiKontroli" required>
+                <option value="">Wybierz wynik...</option>
+                <option value="+">+ (Pozytywny)</option>
+                <option value="-">- (Negatywny)</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="uwagiGroup">
+              <label for="uwagi">Uwagi</label>
+              <textarea id="uwagi" placeholder="Dodatkowe uwagi..."></textarea>
+              <span class="error-message" id="error-uwagi">Uwagi są wymagane dla wyniku negatywnego</span>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpis">Podpis osoby przyjmującej</label>
+              <input type="text" id="podpis" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearDeliveryForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportDeliveryToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data dostawy</th>
+              <th>Nazwa dostawcy</th>
+              <th>Nazwa surowca</th>
+              <th>Ilość [kg]</th>
+              <th>Numer partii</th>
+              <th>Numer HDI</th>
+              <th>Wyniki kontroli</th>
+              <th>Uwagi</th>
+              <th>Podpis</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="deliveryTableBody">
+            <tr class="empty-state">
+              <td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Registry 2: Temperatur pomieszczeń -->
+    <div id="registry-temperatury" class="registry-section">
+      <h3>REJESTR TEMPERATUR POMIESZCZEŃ TECHNOLOGICZNYCH</h3>
+
+      <div class="form-container">
+        <h4>Dodaj pomiar dzienny</h4>
+        <form id="temperatureForm">
+          <div class="form-group required" style="max-width: 300px; margin-bottom: 25px;">
+            <label for="dataPomiaru">Data pomiaru</label>
+            <input type="date" id="dataPomiaru" required>
+          </div>
+
+          <!-- Chłodnia surowca -->
+          <div class="temp-room-section">
+            <h4>Chłodnia surowca</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_chlodnia_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_chlodnia_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_chlodnia" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Magazyn mięsa po rozbiorze -->
+          <div class="temp-room-section">
+            <h4>Magazyn mięsa po rozbiorze</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_magazyn_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_magazyn_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_magazyn" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Peklownia -->
+          <div class="temp-room-section">
+            <h4>Peklownia</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_peklownia_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_peklownia_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_peklownia" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Magazyn produktów gotowych -->
+          <div class="temp-room-section">
+            <h4>Magazyn produktów gotowych</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_produkty_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_produkty_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_produkty" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Rozbiór i obróbka mechaniczna -->
+          <div class="temp-room-section">
+            <h4>Rozbiór i obróbka mechaniczna</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_rozbior_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_rozbior_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_rozbior" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group required" style="max-width: 400px; margin-top: 20px;">
+            <label for="podpisPomiar">Podpis osoby kontrolującej</label>
+            <input type="text" id="podpisPomiar" placeholder="Imię i nazwisko" required>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Zapisz pomiar dzienny</button>
+            <button type="button" class="btn btn-secondary" onclick="clearTemperatureForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportTemperatureToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Lp.</th>
+              <th rowspan="2">Data</th>
+              <th rowspan="2">Pomieszczenie</th>
+              <th colspan="2">Temperatura</th>
+              <th rowspan="2">Uwagi</th>
+              <th rowspan="2">Podpis</th>
+              <th rowspan="2" class="no-print">Akcje</th>
+            </tr>
+            <tr>
+              <th>Rano (°C)</th>
+              <th>Koniec zmiany (°C)</th>
+            </tr>
+          </thead>
+          <tbody id="temperatureTableBody">
+            <tr class="empty-state">
+              <td colspan="8">Brak wpisów. Dodaj pierwszy pomiar używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Registry 3: UPPZ (Kategoria 3) -->
+    <div id="registry-uppz" class="registry-section">
+      <h3>REJESTR PRZEKAZANIA UPPZ (KATEGORIA 3)</h3>
+
+      <div class="form-container">
+        <h4>Dodaj wpis</h4>
+        <form id="uppzForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataPrzekazania">Data przekazania</label>
+              <input type="date" id="dataPrzekazania" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="rodzajOdpadow">Rodzaj odpadów</label>
+              <input type="text" id="rodzajOdpadow" placeholder="np. Odpady z rozbioru" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="iloscUppz">Ilość (kg)</label>
+              <input type="number" id="iloscUppz" step="0.01" min="0" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="odbiorcaNazwa">Odbiorca - nazwa</label>
+              <input type="text" id="odbiorcaNazwa" placeholder="Nazwa firmy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="odbiorcanrZatwierdzenia">Odbiorca - nr zatwierdzenia</label>
+              <input type="text" id="odbiorcaNrZatwierdzenia" placeholder="Nr zatwierdzenia" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nrDokumentu">Nr dokumentu transportowego</label>
+              <input type="text" id="nrDokumentu" placeholder="Nr dokumentu" required>
+            </div>
+
+            <div class="form-group">
+              <label for="uwagiUppz">Uwagi</label>
+              <textarea id="uwagiUppz" placeholder="Opcjonalne uwagi..."></textarea>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpisUppz">Podpis osoby odpowiedzialnej</label>
+              <input type="text" id="podpisUppz" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearUppzForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportUppzToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data przekazania</th>
+              <th>Rodzaj odpadów</th>
+              <th>Ilość (kg)</th>
+              <th>Odbiorca (nazwa, nr zatwierdzenia)</th>
+              <th>Nr dokumentu transportowego</th>
+              <th>Uwagi</th>
+              <th>Podpis osoby odpowiedzialnej</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="uppzTableBody">
+            <tr class="empty-state">
+              <td colspan="9">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Registry 4: Opakowania -->
+    <div id="registry-opakowania" class="registry-section">
+      <h3>REJESTR DOSTAW I KONTROLI OPAKOWAŃ</h3>
+
+      <div class="form-container">
+        <h4>Dodaj wpis</h4>
+        <form id="packagingForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataDostawyOpakowania">Data dostawy</label>
+              <input type="date" id="dataDostawyOpakowania" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="rodzajOpakowania">Rodzaj opakowania</label>
+              <input type="text" id="rodzajOpakowania" placeholder="np. Worki próżniowe" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="dostawcaOpakowania">Dostawca</label>
+              <input type="text" id="dostawcaOpakowania" placeholder="Nazwa dostawcy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="czyAtest">Czy posiada atest?</label>
+              <select id="czyAtest" required>
+                <option value="">Wybierz...</option>
+                <option value="TAK">TAK</option>
+                <option value="NIE">NIE</option>
+              </select>
+            </div>
+
+            <div class="form-group required">
+              <label for="iloscOpakowania">Ilość</label>
+              <input type="number" id="iloscOpakowania" step="1" min="0" placeholder="0" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="wynikKontroliOpakowania">Wynik kontroli jakości</label>
+              <select id="wynikKontroliOpakowania" required>
+                <option value="">Wybierz...</option>
+                <option value="OK">OK</option>
+                <option value="Nie OK">Nie OK</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="uwagiOpakowania">Uwagi</label>
+              <textarea id="uwagiOpakowania" placeholder="Opcjonalne uwagi..."></textarea>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpisOpakowania">Podpis osoby kontrolującej</label>
+              <input type="text" id="podpisOpakowania" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearPackagingForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportPackagingToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data dostawy</th>
+              <th>Rodzaj opakowania</th>
+              <th>Dostawca</th>
+              <th>Czy posiada atest?</th>
+              <th>Ilość</th>
+              <th>Wynik kontroli jakości</th>
+              <th>Uwagi</th>
+              <th>Podpis osoby kontrolującej</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="packagingTableBody">
+            <tr class="empty-state">
+              <td colspan="10">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Registry 5: CCP1 - Obróbka termiczna -->
+    <div id="registry-ccp1" class="registry-section">
+      <h3>REJESTR KONTROLI CCP 1 - OBRÓBKA TERMICZNA</h3>
+      <p style="background: rgba(0, 229, 255, 0.1); padding: 15px; border-left: 4px solid var(--accent-color); border-radius: 8px; margin: 20px 0;">
+        <strong>CCP 1 - Krytyczny Punkt Kontroli:</strong> Temperatura wewnętrzna produktu musi osiągnąć minimum <strong>68°C</strong>, aby zapewnić eliminację mikroorganizmów patogennych.
+      </p>
+
+      <div class="form-container">
+        <h4>Dodaj pomiar</h4>
+        <form id="ccp1Form">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataKontroliCCP">Data kontroli</label>
+              <input type="date" id="dataKontroliCCP" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nazwaProduktu">Nazwa produktu</label>
+              <input type="text" id="nazwaProduktu" placeholder="np. Kiełbasa krakowska" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="rodzajObrobki">Rodzaj obróbki termicznej</label>
+              <select id="rodzajObrobki" required>
+                <option value="">Wybierz...</option>
+                <option value="Wędzenie">Wędzenie</option>
+                <option value="Parzenie">Parzenie</option>
+                <option value="Pieczenie">Pieczenie</option>
+                <option value="Gotowanie">Gotowanie</option>
+                <option value="Wędzenie + Parzenie">Wędzenie + Parzenie</option>
+              </select>
+            </div>
+
+            <div class="form-group required">
+              <label for="tempPoczatkowa">Temperatura początkowa produktu (°C)</label>
+              <input type="number" id="tempPoczatkowa" step="0.1" placeholder="0.0" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="tempDocelowa">Temperatura docelowa (°C)</label>
+              <input type="number" id="tempDocelowa" step="0.1" value="68.0" min="68.0" placeholder="68.0" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="tempOsiagnieta">Temperatura osiągnięta wewnątrz produktu (°C)</label>
+              <input type="number" id="tempOsiagnieta" step="0.1" placeholder="0.0" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="czasObrobki">Czas obróbki (minuty)</label>
+              <input type="number" id="czasObrobki" step="1" min="0" placeholder="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="uwagiCCP">Uwagi</label>
+              <textarea id="uwagiCCP" placeholder="Dodatkowe informacje..."></textarea>
+            </div>
+
+            <div class="form-group" id="dzialaniaKorygujaceGroup" style="display: none;">
+              <label for="dzialaniaKorygujace" style="color: #ef4444;">Działania korygujące (WYMAGANE dla niezgodności)</label>
+              <textarea id="dzialaniaKorygujace" placeholder="Opisz podjęte działania korygujące..." rows="3"></textarea>
+              <span class="error-message" id="error-dzialania" style="display: block; margin-top: 5px;">⚠️ Dla wyniku niezgodnego MUSISZ opisać działania korygujące!</span>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpisCCP">Podpis osoby kontrolującej</label>
+              <input type="text" id="podpisCCP" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Zapisz pomiar CCP1</button>
+            <button type="button" class="btn btn-secondary" onclick="clearCCP1Form()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportCCP1ToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data kontroli</th>
+              <th>Nazwa produktu</th>
+              <th>Rodzaj obróbki</th>
+              <th>Temp. początkowa (°C)</th>
+              <th>Temp. docelowa (°C)</th>
+              <th>Temp. osiągnięta (°C)</th>
+              <th>Czas (min)</th>
+              <th>Wynik CCP</th>
+              <th>Działania korygujące</th>
+              <th>Uwagi</th>
+              <th>Podpis</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="ccp1TableBody">
+            <tr class="empty-state">
+              <td colspan="13">Brak wpisów. Dodaj pierwszy pomiar CCP1 używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
   </main>
-  <footer>INOVIT © 2025</footer>
+
+  <footer>Wędliny z Tradycją © 2025</footer>
+
   <script src="app.js"></script>
+  <script>
+    // Storage keys
+    const DELIVERY_STORAGE_KEY = 'zm_surowiec_registry';
+    const TEMPERATURE_STORAGE_KEY = 'zm_temperature_registry';
+    const UPPZ_STORAGE_KEY = 'zm_uppz_registry';
+    const PACKAGING_STORAGE_KEY = 'zm_packaging_registry';
+    const CCP1_STORAGE_KEY = 'zm_ccp1_registry';
+
+    // Tab switching
+    function switchTab(tabName) {
+      // Update buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update sections
+      document.querySelectorAll('.registry-section').forEach(section => section.classList.remove('active'));
+      document.getElementById('registry-' + tabName).classList.add('active');
+    }
+
+    // ===== DELIVERY REGISTRY =====
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDeliveryRegistry();
+      loadTemperatureRegistry();
+      loadUppzRegistry();
+      loadPackagingRegistry();
+      loadCCP1Registry();
+      setupDeliveryValidation();
+      setupCCP1Validation();
+    });
+
+    function setupDeliveryValidation() {
+      const wynikiKontroliSelect = document.getElementById('wynikiKontroli');
+      const uwagiGroup = document.getElementById('uwagiGroup');
+      const uwagiInput = document.getElementById('uwagi');
+
+      wynikiKontroliSelect.addEventListener('change', function() {
+        if (this.value === '-') {
+          uwagiGroup.classList.add('required');
+          uwagiInput.required = true;
+        } else {
+          uwagiGroup.classList.remove('required');
+          uwagiInput.required = false;
+        }
+      });
+    }
+
+    document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        dataDostawy: document.getElementById('dataDostawy').value,
+        nazwaDostawcy: document.getElementById('nazwaDostawcy').value,
+        nazwaSurowca: document.getElementById('nazwaSurowca').value,
+        ilosc: document.getElementById('ilosc').value,
+        numerPartii: document.getElementById('numerPartii').value,
+        numerHDI: document.getElementById('numerHDI').value,
+        wynikiKontroli: document.getElementById('wynikiKontroli').value,
+        uwagi: document.getElementById('uwagi').value,
+        podpis: document.getElementById('podpis').value,
+        timestamp: new Date().toISOString()
+      };
+
+      if (formData.wynikiKontroli === '-' && !formData.uwagi.trim()) {
+        document.getElementById('error-uwagi').style.display = 'block';
+        return;
+      }
+
+      saveDeliveryEntry(formData);
+      clearDeliveryForm();
+      loadDeliveryRegistry();
+      alert('Wpis został dodany pomyślnie!');
+    });
+
+    function saveDeliveryEntry(entry) {
+      let registry = getDeliveryRegistry();
+      registry.push(entry);
+      localStorage.setItem(DELIVERY_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getDeliveryRegistry() {
+      const data = localStorage.getItem(DELIVERY_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadDeliveryRegistry() {
+      const registry = getDeliveryRegistry();
+      const tbody = document.getElementById('deliveryTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        const resultClass = entry.wynikiKontroli === '+' ? 'result-positive' : 'result-negative';
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataDostawy)}</td>
+          <td>${escapeHtml(entry.nazwaDostawcy)}</td>
+          <td>${escapeHtml(entry.nazwaSurowca)}</td>
+          <td>${parseFloat(entry.ilosc).toFixed(2)}</td>
+          <td>${escapeHtml(entry.numerPartii)}</td>
+          <td>${escapeHtml(entry.numerHDI)}</td>
+          <td class="${resultClass}">${escapeHtml(entry.wynikiKontroli)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deleteDeliveryEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteDeliveryEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getDeliveryRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(DELIVERY_STORAGE_KEY, JSON.stringify(registry));
+        loadDeliveryRegistry();
+      }
+    }
+
+    function clearDeliveryForm() {
+      document.getElementById('deliveryForm').reset();
+      document.getElementById('uwagiGroup').classList.remove('required');
+      document.getElementById('uwagi').required = false;
+    }
+
+    function exportDeliveryToCSV() {
+      const registry = getDeliveryRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data dostawy,Nazwa dostawcy,Nazwa surowca,Ilość [kg],Numer partii,Numer HDI,Wyniki kontroli,Uwagi,Podpis\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataDostawy}","${entry.nazwaDostawcy}","${entry.nazwaSurowca}",${entry.ilosc},"${entry.numerPartii}","${entry.numerHDI}","${entry.wynikiKontroli}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_dostaw_surowca');
+    }
+
+    // ===== TEMPERATURE REGISTRY =====
+    document.getElementById('temperatureForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const dataPomiaru = document.getElementById('dataPomiaru').value;
+      const podpis = document.getElementById('podpisPomiar').value;
+
+      const rooms = [
+        {
+          name: 'Chłodnia surowca',
+          rano: document.getElementById('temp_chlodnia_rano').value,
+          koniec: document.getElementById('temp_chlodnia_koniec').value,
+          uwagi: document.getElementById('uwagi_chlodnia').value
+        },
+        {
+          name: 'Magazyn mięsa po rozbiorze',
+          rano: document.getElementById('temp_magazyn_rano').value,
+          koniec: document.getElementById('temp_magazyn_koniec').value,
+          uwagi: document.getElementById('uwagi_magazyn').value
+        },
+        {
+          name: 'Peklownia',
+          rano: document.getElementById('temp_peklownia_rano').value,
+          koniec: document.getElementById('temp_peklownia_koniec').value,
+          uwagi: document.getElementById('uwagi_peklownia').value
+        },
+        {
+          name: 'Magazyn produktów gotowych',
+          rano: document.getElementById('temp_produkty_rano').value,
+          koniec: document.getElementById('temp_produkty_koniec').value,
+          uwagi: document.getElementById('uwagi_produkty').value
+        },
+        {
+          name: 'Rozbiór i obróbka mechaniczna',
+          rano: document.getElementById('temp_rozbior_rano').value,
+          koniec: document.getElementById('temp_rozbior_koniec').value,
+          uwagi: document.getElementById('uwagi_rozbior').value
+        }
+      ];
+
+      const entry = {
+        data: dataPomiaru,
+        rooms: rooms,
+        podpis: podpis,
+        timestamp: new Date().toISOString()
+      };
+
+      saveTemperatureEntry(entry);
+      clearTemperatureForm();
+      loadTemperatureRegistry();
+      alert('Pomiar dzienny został zapisany!');
+    });
+
+    function saveTemperatureEntry(entry) {
+      let registry = getTemperatureRegistry();
+      registry.push(entry);
+      localStorage.setItem(TEMPERATURE_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getTemperatureRegistry() {
+      const data = localStorage.getItem(TEMPERATURE_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadTemperatureRegistry() {
+      const registry = getTemperatureRegistry();
+      const tbody = document.getElementById('temperatureTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="8">Brak wpisów. Dodaj pierwszy pomiar używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      let rowNumber = 1;
+
+      registry.forEach((entry, entryIndex) => {
+        entry.rooms.forEach((room, roomIndex) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${rowNumber++}</td>
+            <td>${roomIndex === 0 ? formatDate(entry.data) : ''}</td>
+            <td><strong>${escapeHtml(room.name)}</strong></td>
+            <td>${parseFloat(room.rano).toFixed(1)}</td>
+            <td>${parseFloat(room.koniec).toFixed(1)}</td>
+            <td>${escapeHtml(room.uwagi)}</td>
+            <td>${roomIndex === 0 ? escapeHtml(entry.podpis) : ''}</td>
+            <td class="no-print">
+              ${roomIndex === 0 ? `<button class="action-btn" onclick="deleteTemperatureEntry(${entryIndex})" title="Usuń dzień">🗑️</button>` : ''}
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+    }
+
+    function deleteTemperatureEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć pomiar dla tego dnia (wszystkie pomieszczenia)?')) {
+        let registry = getTemperatureRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(TEMPERATURE_STORAGE_KEY, JSON.stringify(registry));
+        loadTemperatureRegistry();
+      }
+    }
+
+    function clearTemperatureForm() {
+      document.getElementById('temperatureForm').reset();
+    }
+
+    function exportTemperatureToCSV() {
+      const registry = getTemperatureRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Data,Pomieszczenie,Temperatura rano (°C),Temperatura koniec zmiany (°C),Uwagi,Podpis\n';
+      registry.forEach(entry => {
+        entry.rooms.forEach(room => {
+          csv += `"${entry.data}","${room.name}",${room.rano},${room.koniec},"${room.uwagi}","${entry.podpis}"\n`;
+        });
+      });
+
+      downloadCSV(csv, 'rejestr_temperatur');
+    }
+
+    // ===== UPPZ REGISTRY =====
+    document.getElementById('uppzForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        dataPrzekazania: document.getElementById('dataPrzekazania').value,
+        rodzajOdpadow: document.getElementById('rodzajOdpadow').value,
+        ilosc: document.getElementById('iloscUppz').value,
+        odbiorcaNazwa: document.getElementById('odbiorcaNazwa').value,
+        odbiorcaNrZatwierdzenia: document.getElementById('odbiorcaNrZatwierdzenia').value,
+        nrDokumentu: document.getElementById('nrDokumentu').value,
+        uwagi: document.getElementById('uwagiUppz').value,
+        podpis: document.getElementById('podpisUppz').value,
+        timestamp: new Date().toISOString()
+      };
+
+      saveUppzEntry(formData);
+      clearUppzForm();
+      loadUppzRegistry();
+      alert('Wpis UPPZ został dodany pomyślnie!');
+    });
+
+    function saveUppzEntry(entry) {
+      let registry = getUppzRegistry();
+      registry.push(entry);
+      localStorage.setItem(UPPZ_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getUppzRegistry() {
+      const data = localStorage.getItem(UPPZ_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadUppzRegistry() {
+      const registry = getUppzRegistry();
+      const tbody = document.getElementById('uppzTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="9">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        const odbiorca = `${escapeHtml(entry.odbiorcaNazwa)}, ${escapeHtml(entry.odbiorcaNrZatwierdzenia)}`;
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataPrzekazania)}</td>
+          <td>${escapeHtml(entry.rodzajOdpadow)}</td>
+          <td>${parseFloat(entry.ilosc).toFixed(2)}</td>
+          <td>${odbiorca}</td>
+          <td>${escapeHtml(entry.nrDokumentu)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deleteUppzEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteUppzEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getUppzRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(UPPZ_STORAGE_KEY, JSON.stringify(registry));
+        loadUppzRegistry();
+      }
+    }
+
+    function clearUppzForm() {
+      document.getElementById('uppzForm').reset();
+    }
+
+    function exportUppzToCSV() {
+      const registry = getUppzRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data przekazania,Rodzaj odpadów,Ilość (kg),Odbiorca - nazwa,Odbiorca - nr zatwierdzenia,Nr dokumentu transportowego,Uwagi,Podpis\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataPrzekazania}","${entry.rodzajOdpadow}",${entry.ilosc},"${entry.odbiorcaNazwa}","${entry.odbiorcaNrZatwierdzenia}","${entry.nrDokumentu}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_uppz');
+    }
+
+    // ===== PACKAGING REGISTRY =====
+    document.getElementById('packagingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        dataDostawy: document.getElementById('dataDostawyOpakowania').value,
+        rodzajOpakowania: document.getElementById('rodzajOpakowania').value,
+        dostawca: document.getElementById('dostawcaOpakowania').value,
+        czyAtest: document.getElementById('czyAtest').value,
+        ilosc: document.getElementById('iloscOpakowania').value,
+        wynikKontroli: document.getElementById('wynikKontroliOpakowania').value,
+        uwagi: document.getElementById('uwagiOpakowania').value,
+        podpis: document.getElementById('podpisOpakowania').value,
+        timestamp: new Date().toISOString()
+      };
+
+      savePackagingEntry(formData);
+      clearPackagingForm();
+      loadPackagingRegistry();
+      alert('Wpis został dodany pomyślnie!');
+    });
+
+    function savePackagingEntry(entry) {
+      let registry = getPackagingRegistry();
+      registry.push(entry);
+      localStorage.setItem(PACKAGING_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getPackagingRegistry() {
+      const data = localStorage.getItem(PACKAGING_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadPackagingRegistry() {
+      const registry = getPackagingRegistry();
+      const tbody = document.getElementById('packagingTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="10">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+
+        // Color-code quality control result
+        let wynikClass = '';
+        if (entry.wynikKontroli === 'OK') {
+          wynikClass = 'result-positive';
+        } else if (entry.wynikKontroli === 'Nie OK') {
+          wynikClass = 'result-negative';
+        }
+
+        // Color-code atest
+        let atestClass = '';
+        if (entry.czyAtest === 'TAK') {
+          atestClass = 'result-positive';
+        } else if (entry.czyAtest === 'NIE') {
+          atestClass = 'result-negative';
+        }
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataDostawy)}</td>
+          <td>${escapeHtml(entry.rodzajOpakowania)}</td>
+          <td>${escapeHtml(entry.dostawca)}</td>
+          <td class="${atestClass}">${escapeHtml(entry.czyAtest)}</td>
+          <td>${parseInt(entry.ilosc)}</td>
+          <td class="${wynikClass}">${escapeHtml(entry.wynikKontroli)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deletePackagingEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deletePackagingEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getPackagingRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(PACKAGING_STORAGE_KEY, JSON.stringify(registry));
+        loadPackagingRegistry();
+      }
+    }
+
+    function clearPackagingForm() {
+      document.getElementById('packagingForm').reset();
+    }
+
+    function exportPackagingToCSV() {
+      const registry = getPackagingRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data dostawy,Rodzaj opakowania,Dostawca,Czy posiada atest?,Ilość,Wynik kontroli jakości,Uwagi,Podpis osoby kontrolującej\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataDostawy}","${entry.rodzajOpakowania}","${entry.dostawca}","${entry.czyAtest}",${entry.ilosc},"${entry.wynikKontroli}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_opakowan');
+    }
+
+    // ===== CCP1 REGISTRY =====
+    function setupCCP1Validation() {
+      const tempOsiagnietaInput = document.getElementById('tempOsiagnieta');
+      const dzialaniaGroup = document.getElementById('dzialaniaKorygujaceGroup');
+      const dzialaniaInput = document.getElementById('dzialaniaKorygujace');
+
+      // Monitor temperature input to show/hide corrective actions
+      tempOsiagnietaInput.addEventListener('input', function() {
+        const tempOsiagnieta = parseFloat(this.value);
+        const tempDocelowa = parseFloat(document.getElementById('tempDocelowa').value) || 68.0;
+
+        if (tempOsiagnieta && tempOsiagnieta < tempDocelowa) {
+          // Niezgodność - pokazmówimy pole działań korygujących
+          dzialaniaGroup.style.display = 'block';
+          dzialaniaGroup.classList.add('required');
+          dzialaniaInput.required = true;
+        } else {
+          // Zgodność - ukryj pole
+          dzialaniaGroup.style.display = 'none';
+          dzialaniaGroup.classList.remove('required');
+          dzialaniaInput.required = false;
+          dzialaniaInput.value = '';
+        }
+      });
+    }
+
+    document.getElementById('ccp1Form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const tempOsiagnieta = parseFloat(document.getElementById('tempOsiagnieta').value);
+      const tempDocelowa = parseFloat(document.getElementById('tempDocelowa').value);
+      const dzialania = document.getElementById('dzialaniaKorygujace').value;
+
+      // Validate corrective actions for non-conformity
+      if (tempOsiagnieta < tempDocelowa && !dzialania.trim()) {
+        alert('⚠️ UWAGA: Temperatura poniżej wymaganej! Musisz opisać działania korygujące.');
+        document.getElementById('dzialaniaKorygujace').focus();
+        return;
+      }
+
+      const wynikCCP = tempOsiagnieta >= tempDocelowa ? 'ZGODNY' : 'NIEZGODNY';
+
+      const formData = {
+        dataKontroli: document.getElementById('dataKontroliCCP').value,
+        nazwaProduktu: document.getElementById('nazwaProduktu').value,
+        rodzajObrobki: document.getElementById('rodzajObrobki').value,
+        tempPoczatkowa: document.getElementById('tempPoczatkowa').value,
+        tempDocelowa: tempDocelowa,
+        tempOsiagnieta: tempOsiagnieta,
+        czasObrobki: document.getElementById('czasObrobki').value,
+        wynikCCP: wynikCCP,
+        dzialaniaKorygujace: dzialania,
+        uwagi: document.getElementById('uwagiCCP').value,
+        podpis: document.getElementById('podpisCCP').value,
+        timestamp: new Date().toISOString()
+      };
+
+      saveCCP1Entry(formData);
+      clearCCP1Form();
+      loadCCP1Registry();
+
+      if (wynikCCP === 'NIEZGODNY') {
+        alert('⚠️ NIEZGODNOŚĆ CCP1 ZAPISANA!\n\nTemperatura poniżej wymaganej. Działania korygujące zostały zarejestrowane.');
+      } else {
+        alert('✅ Pomiar CCP1 zapisany pomyślnie! Temperatura zgodna z wymaganiami.');
+      }
+    });
+
+    function saveCCP1Entry(entry) {
+      let registry = getCCP1Registry();
+      registry.push(entry);
+      localStorage.setItem(CCP1_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getCCP1Registry() {
+      const data = localStorage.getItem(CCP1_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadCCP1Registry() {
+      const registry = getCCP1Registry();
+      const tbody = document.getElementById('ccp1TableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="13">Brak wpisów. Dodaj pierwszy pomiar CCP1 używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+
+        // Color-code CCP result
+        let wynikClass = '';
+        let wynikDisplay = '';
+        if (entry.wynikCCP === 'ZGODNY') {
+          wynikClass = 'result-positive';
+          wynikDisplay = '✓ ZGODNY';
+        } else if (entry.wynikCCP === 'NIEZGODNY') {
+          wynikClass = 'result-negative';
+          wynikDisplay = '✗ NIEZGODNY';
+        }
+
+        // Highlight if corrective actions needed
+        const rowStyle = entry.wynikCCP === 'NIEZGODNY' ? 'background: rgba(239, 68, 68, 0.05);' : '';
+
+        row.setAttribute('style', rowStyle);
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataKontroli)}</td>
+          <td>${escapeHtml(entry.nazwaProduktu)}</td>
+          <td>${escapeHtml(entry.rodzajObrobki)}</td>
+          <td>${parseFloat(entry.tempPoczatkowa).toFixed(1)}</td>
+          <td>${parseFloat(entry.tempDocelowa).toFixed(1)}</td>
+          <td><strong>${parseFloat(entry.tempOsiagnieta).toFixed(1)}</strong></td>
+          <td>${parseInt(entry.czasObrobki)}</td>
+          <td class="${wynikClass}"><strong>${wynikDisplay}</strong></td>
+          <td>${escapeHtml(entry.dzialaniaKorygujace)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deleteCCP1Entry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteCCP1Entry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis CCP1?')) {
+        let registry = getCCP1Registry();
+        registry.splice(index, 1);
+        localStorage.setItem(CCP1_STORAGE_KEY, JSON.stringify(registry));
+        loadCCP1Registry();
+      }
+    }
+
+    function clearCCP1Form() {
+      document.getElementById('ccp1Form').reset();
+      document.getElementById('dzialaniaKorygujaceGroup').style.display = 'none';
+      document.getElementById('dzialaniaKorygujace').required = false;
+      document.getElementById('tempDocelowa').value = '68.0';
+    }
+
+    function exportCCP1ToCSV() {
+      const registry = getCCP1Registry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data kontroli,Nazwa produktu,Rodzaj obróbki,Temp. początkowa (°C),Temp. docelowa (°C),Temp. osiągnięta (°C),Czas (min),Wynik CCP,Działania korygujące,Uwagi,Podpis\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataKontroli}","${entry.nazwaProduktu}","${entry.rodzajObrobki}",${entry.tempPoczatkowa},${entry.tempDocelowa},${entry.tempOsiagnieta},${entry.czasObrobki},"${entry.wynikCCP}","${entry.dzialaniaKorygujace}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_ccp1_obrobka_termiczna');
+    }
+
+    // ===== UTILITY FUNCTIONS =====
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('pl-PL');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    function downloadCSV(csvContent, filename) {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
 </body>
 </html>
