@@ -14,6 +14,9 @@ function initializeApp() {
   setupOfflineIndicator();
   checkOnlineStatus();
   setupDarkMode();
+  setupPageTransitions();
+  setupScrollAnimations();
+  addRippleEffect();
 }
 
 // ===== Service Worker Registration =====
@@ -265,9 +268,163 @@ function disableDarkMode() {
   console.log('☀️ Light mode enabled');
 }
 
+// ===== Page Transitions =====
+function setupPageTransitions() {
+  // Add smooth page transitions for internal links
+  const links = document.querySelectorAll('a[href^="./"], a[href$=".html"]');
+
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+
+      // Only apply to internal links (not external or anchors)
+      if (href && !href.startsWith('http') && !href.startsWith('#')) {
+        e.preventDefault();
+
+        // Add fade out animation
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'translateY(-20px)';
+        document.body.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+
+        // Navigate after animation
+        setTimeout(() => {
+          window.location.href = href;
+        }, 300);
+      }
+    });
+  });
+
+  // Fade in on page load
+  window.addEventListener('load', () => {
+    document.body.style.opacity = '1';
+    document.body.style.transform = 'translateY(0)';
+  });
+}
+
+// ===== Scroll Animations =====
+function setupScrollAnimations() {
+  // Check if Intersection Observer is supported
+  if ('IntersectionObserver' in window) {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements that should animate on scroll
+    const animateElements = document.querySelectorAll('.content-section > *');
+    animateElements.forEach(el => {
+      el.classList.add('animate-on-scroll');
+      observer.observe(el);
+    });
+  }
+}
+
+// ===== Ripple Effect =====
+function addRippleEffect() {
+  const buttons = document.querySelectorAll('button, .btn, .tile');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Create ripple element
+      const ripple = document.createElement('span');
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        left: ${x}px;
+        top: ${y}px;
+        pointer-events: none;
+        animation: ripple 0.6s ease-out;
+      `;
+
+      this.appendChild(ripple);
+
+      // Remove ripple after animation
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+  // Add ripple animation to document
+  if (!document.getElementById('ripple-style')) {
+    const style = document.createElement('style');
+    style.id = 'ripple-style';
+    style.textContent = `
+      @keyframes ripple {
+        from {
+          transform: scale(0);
+          opacity: 1;
+        }
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// ===== Enhanced Loading States =====
+function showLoadingState(element) {
+  element.classList.add('skeleton');
+  element.style.pointerEvents = 'none';
+}
+
+function hideLoadingState(element) {
+  element.classList.remove('skeleton');
+  element.style.pointerEvents = 'auto';
+}
+
+// ===== Smooth Scroll =====
+document.addEventListener('click', (e) => {
+  const anchor = e.target.closest('a[href^="#"]');
+  if (anchor) {
+    e.preventDefault();
+    const target = document.querySelector(anchor.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }
+});
+
+// ===== Performance: Preload on hover =====
+document.addEventListener('mouseover', (e) => {
+  const link = e.target.closest('a[href$=".html"]');
+  if (link && !link.hasAttribute('data-preloaded')) {
+    link.setAttribute('data-preloaded', 'true');
+    const href = link.getAttribute('href');
+
+    // Preload the page
+    const linkTag = document.createElement('link');
+    linkTag.rel = 'prefetch';
+    linkTag.href = href;
+    document.head.appendChild(linkTag);
+  }
+});
+
 // Log PWA capabilities
 console.log('📱 INOVIT e-Segregator PWA initialized');
 console.log('Service Worker support:', 'serviceWorker' in navigator);
 console.log('Notification support:', 'Notification' in window);
 console.log('Push support:', 'PushManager' in window);
 console.log('Online status:', navigator.onLine);
+console.log('🎨 Advanced animations enabled');
