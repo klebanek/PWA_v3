@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Rejestry i zapisy HACCP">
+  <meta name="description" content="Rejestr dostaw surowca mięsnego">
   <meta name="theme-color" content="#007380">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,28 +12,561 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Rejestry i Zapisy - Wędliny z Tradycją</title>
+  <title>Rejestr Dostaw Surowca - Wędliny z Tradycją</title>
+  <style>
+    .registry-container {
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .form-container {
+      background: rgba(0, 79, 93, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px 0;
+      box-shadow: 0 8px 32px rgba(0, 229, 255, 0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px;
+      border: 2px solid rgba(0, 115, 128, 0.3);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-group.required label::after {
+      content: " *";
+      color: #ff4444;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 115, 128, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 79, 93, 0.1);
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 79, 93, 0.2);
+    }
+
+    .registry-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .registry-table thead {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .registry-table th {
+      padding: 15px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .registry-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(0, 115, 128, 0.1);
+      font-size: 0.9rem;
+    }
+
+    .registry-table tbody tr:hover {
+      background: rgba(0, 229, 255, 0.05);
+    }
+
+    .registry-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .result-positive {
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .result-negative {
+      color: #ef4444;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 5px 10px;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .error-message {
+      color: #ef4444;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .instructions {
+      background: rgba(0, 229, 255, 0.05);
+      border-left: 4px solid var(--accent-color);
+      padding: 20px;
+      margin: 30px 0;
+      border-radius: 8px;
+    }
+
+    .instructions h3 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+
+    .instructions ul {
+      line-height: 1.8;
+    }
+
+    @media print {
+      .form-container,
+      .btn-container,
+      .action-btn,
+      header,
+      footer,
+      .back-link {
+        display: none !important;
+      }
+
+      .registry-table {
+        box-shadow: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .registry-container {
+        font-size: 0.85rem;
+      }
+
+      .registry-table th,
+      .registry-table td {
+        padding: 8px 5px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Wędliny z Tradycją</h1>
     <p>SYSTEM HACCP – DOKUMENTACJA ZAKŁADU MIĘSNEGO</p>
   </header>
+
   <main class="content-section">
-    <h2>Rejestry i Zapisy</h2>
-    <p>Dokumentacja obejmująca systematyczne zapisy z monitoringu i kontroli:</p>
-    <ul>
-      <li>Rejestry temperatury przechowywania</li>
-      <li>Zapisy z pomiarów CCP</li>
-      <li>Dokumentacja przyjęcia surowców</li>
-      <li>Karty kontroli jakości produktu</li>
-      <li>Rejestry czyszczenia i dezynfekcji</li>
-      <li>Zapisy z kontroli szkodników</li>
-    </ul>
-    <p>Wszystkie rejestry są prowadzone zgodnie z wymogami systemu HACCP i przechowywane przez okres wymagany prawem.</p>
+    <h2>REJESTR DOSTAW SUROWCA MIĘSNEGO</h2>
+
+    <!-- Form for adding new entries -->
+    <div class="form-container">
+      <h3>Dodaj nowy wpis</h3>
+      <form id="deliveryForm">
+        <div class="form-grid">
+          <div class="form-group required">
+            <label for="dataDostawy">Data dostawy</label>
+            <input type="date" id="dataDostawy" name="dataDostawy" required>
+            <span class="error-message" id="error-dataDostawy">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="nazwaDostawcy">Nazwa dostawcy</label>
+            <input type="text" id="nazwaDostawcy" name="nazwaDostawcy" placeholder="Wprowadź nazwę dostawcy" required>
+            <span class="error-message" id="error-nazwaDostawcy">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="nazwaSurowca">Nazwa surowca</label>
+            <input type="text" id="nazwaSurowca" name="nazwaSurowca" placeholder="np. Półtusze wieprzowe" required>
+            <span class="error-message" id="error-nazwaSurowca">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="ilosc">Ilość [kg]</label>
+            <input type="number" id="ilosc" name="ilosc" step="0.01" min="0" placeholder="0.00" required>
+            <span class="error-message" id="error-ilosc">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="numerPartii">Numer partii</label>
+            <input type="text" id="numerPartii" name="numerPartii" placeholder="Wprowadź numer partii" required>
+            <span class="error-message" id="error-numerPartii">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="numerHDI">Numer HDI</label>
+            <input type="text" id="numerHDI" name="numerHDI" placeholder="Wprowadź numer HDI" required>
+            <span class="error-message" id="error-numerHDI">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="wynikiKontroli">Wyniki kontroli</label>
+            <select id="wynikiKontroli" name="wynikiKontroli" required>
+              <option value="">Wybierz wynik...</option>
+              <option value="+">+ (Pozytywny)</option>
+              <option value="-">- (Negatywny)</option>
+            </select>
+            <span class="error-message" id="error-wynikiKontroli">To pole jest wymagane</span>
+          </div>
+
+          <div class="form-group" id="uwagiGroup">
+            <label for="uwagi">Uwagi</label>
+            <textarea id="uwagi" name="uwagi" placeholder="Dodatkowe uwagi..."></textarea>
+            <span class="error-message" id="error-uwagi">Uwagi są wymagane dla wyniku negatywnego</span>
+          </div>
+
+          <div class="form-group required">
+            <label for="podpis">Podpis osoby przyjmującej</label>
+            <input type="text" id="podpis" name="podpis" placeholder="Imię i nazwisko" required>
+            <span class="error-message" id="error-podpis">To pole jest wymagane</span>
+          </div>
+        </div>
+
+        <div class="btn-container">
+          <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+          <button type="button" class="btn btn-secondary" onclick="clearForm()">Wyczyść formularz</button>
+          <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj rejestr</button>
+          <button type="button" class="btn btn-secondary" onclick="exportToCSV()">Eksportuj do CSV</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Registry Table -->
+    <div class="registry-container">
+      <table class="registry-table" id="registryTable">
+        <thead>
+          <tr>
+            <th>Lp.</th>
+            <th>Data dostawy</th>
+            <th>Nazwa dostawcy</th>
+            <th>Nazwa surowca</th>
+            <th>Ilość [kg]</th>
+            <th>Numer partii</th>
+            <th>Numer HDI</th>
+            <th>Wyniki kontroli</th>
+            <th>Uwagi</th>
+            <th>Podpis osoby przyjmującej</th>
+            <th class="no-print">Akcje</th>
+          </tr>
+        </thead>
+        <tbody id="registryBody">
+          <tr class="empty-state">
+            <td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>Instrukcja wypełniania rejestru</h3>
+      <ul>
+        <li><strong>Data dostawy:</strong> Wprowadź datę otrzymania surowca do zakładu.</li>
+        <li><strong>Nazwa dostawcy:</strong> Pełna nazwa firmy dostarczającej surowiec.</li>
+        <li><strong>Nazwa surowca:</strong> Określenie rodzaju surowca mięsnego (np. półtusze wieprzowe, mięso wołowe, podroby drobiowe).</li>
+        <li><strong>Ilość [kg]:</strong> Masa surowca w kilogramach z dokładnością do dwóch miejsc po przecinku.</li>
+        <li><strong>Numer partii:</strong> Numer identyfikacyjny partii surowca od dostawcy.</li>
+        <li><strong>Numer HDI:</strong> Numer dokumentu handlowego identyfikującego dostawę.</li>
+        <li><strong>Wyniki kontroli:</strong> Oznaczenie "+" (pozytywny) lub "-" (negatywny) na podstawie kontroli:
+          <ul>
+            <li>Temperatury (półtusze i mięso ≤ 7°C, podroby ≤ 3°C, mięso drobiowe ≤ 4°C)</li>
+            <li>Stanu organoleptycznego (wygląd, zapach, konsystencja)</li>
+            <li>Kompletności dokumentacji (świadectwa weterynaryjne, certyfikaty)</li>
+          </ul>
+        </li>
+        <li><strong>Uwagi:</strong> W przypadku wyniku negatywnego (-) WYMAGANE jest podanie przyczyny odrzucenia lub podjętych działań naprawczych.</li>
+        <li><strong>Podpis osoby przyjmującej:</strong> Imię i nazwisko pracownika odpowiedzialnego za przyjęcie surowca.</li>
+      </ul>
+      <p><strong>Ważne:</strong> Rejestr musi być dostępny podczas audytów wewnętrznych i zewnętrznych. Wszystkie wpisy są zapisywane lokalnie w przeglądarce.</p>
+    </div>
+
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
   </main>
+
   <footer>Wędliny z Tradycją © 2025</footer>
+
   <script src="app.js"></script>
+  <script>
+    // LocalStorage key for registry data
+    const STORAGE_KEY = 'zm_surowiec_registry';
+
+    // Load registry data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadRegistry();
+      setupFormValidation();
+    });
+
+    // Form validation setup
+    function setupFormValidation() {
+      const wynikiKontroliSelect = document.getElementById('wynikiKontroli');
+      const uwagiGroup = document.getElementById('uwagiGroup');
+      const uwagiInput = document.getElementById('uwagi');
+
+      wynikiKontroliSelect.addEventListener('change', function() {
+        if (this.value === '-') {
+          uwagiGroup.classList.add('required');
+          uwagiInput.required = true;
+        } else {
+          uwagiGroup.classList.remove('required');
+          uwagiInput.required = false;
+          document.getElementById('error-uwagi').style.display = 'none';
+        }
+      });
+    }
+
+    // Form submission handler
+    document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Clear previous errors
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+      // Get form values
+      const formData = {
+        dataDostawy: document.getElementById('dataDostawy').value,
+        nazwaDostawcy: document.getElementById('nazwaDostawcy').value,
+        nazwaSurowca: document.getElementById('nazwaSurowca').value,
+        ilosc: document.getElementById('ilosc').value,
+        numerPartii: document.getElementById('numerPartii').value,
+        numerHDI: document.getElementById('numerHDI').value,
+        wynikiKontroli: document.getElementById('wynikiKontroli').value,
+        uwagi: document.getElementById('uwagi').value,
+        podpis: document.getElementById('podpis').value,
+        timestamp: new Date().toISOString()
+      };
+
+      // Validate negative result requires notes
+      if (formData.wynikiKontroli === '-' && !formData.uwagi.trim()) {
+        document.getElementById('error-uwagi').style.display = 'block';
+        document.getElementById('uwagi').focus();
+        return;
+      }
+
+      // Save to registry
+      saveEntry(formData);
+
+      // Clear form
+      clearForm();
+
+      // Reload table
+      loadRegistry();
+
+      // Show success feedback
+      alert('Wpis został dodany pomyślnie!');
+    });
+
+    // Save entry to localStorage
+    function saveEntry(entry) {
+      let registry = getRegistry();
+      registry.push(entry);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    // Get registry from localStorage
+    function getRegistry() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    // Load and display registry
+    function loadRegistry() {
+      const registry = getRegistry();
+      const tbody = document.getElementById('registryBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        const resultClass = entry.wynikiKontroli === '+' ? 'result-positive' : 'result-negative';
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataDostawy)}</td>
+          <td>${escapeHtml(entry.nazwaDostawcy)}</td>
+          <td>${escapeHtml(entry.nazwaSurowca)}</td>
+          <td>${parseFloat(entry.ilosc).toFixed(2)}</td>
+          <td>${escapeHtml(entry.numerPartii)}</td>
+          <td>${escapeHtml(entry.numerHDI)}</td>
+          <td class="${resultClass}">${escapeHtml(entry.wynikiKontroli)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deleteEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Delete entry
+    function deleteEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registry));
+        loadRegistry();
+      }
+    }
+
+    // Clear form
+    function clearForm() {
+      document.getElementById('deliveryForm').reset();
+      document.getElementById('uwagiGroup').classList.remove('required');
+      document.getElementById('uwagi').required = false;
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    }
+
+    // Export to CSV
+    function exportToCSV() {
+      const registry = getRegistry();
+
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      // CSV headers
+      let csv = 'Lp.,Data dostawy,Nazwa dostawcy,Nazwa surowca,Ilość [kg],Numer partii,Numer HDI,Wyniki kontroli,Uwagi,Podpis osoby przyjmującej\n';
+
+      // CSV rows
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataDostawy}","${entry.nazwaDostawcy}","${entry.nazwaSurowca}",${entry.ilosc},"${entry.numerPartii}","${entry.numerHDI}","${entry.wynikiKontroli}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      // Create download link
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', `rejestr_dostaw_surowca_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Format date for display
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('pl-PL');
+    }
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Add CSS for print
+    const style = document.createElement('style');
+    style.textContent = `
+      @media print {
+        .no-print { display: none !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
 </body>
 </html>
