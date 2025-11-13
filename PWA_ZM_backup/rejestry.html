@@ -314,6 +314,9 @@
       <button class="tab-button" onclick="switchTab('uppz')">
         REJESTR PRZEKAZANIA UPPZ
       </button>
+      <button class="tab-button" onclick="switchTab('opakowania')">
+        REJESTR DOSTAW OPAKOWAŃ
+      </button>
     </div>
 
     <!-- Registry 1: Dostaw surowca mięsnego -->
@@ -639,6 +642,97 @@
       </div>
     </div>
 
+    <!-- Registry 4: Opakowania -->
+    <div id="registry-opakowania" class="registry-section">
+      <h3>REJESTR DOSTAW I KONTROLI OPAKOWAŃ</h3>
+
+      <div class="form-container">
+        <h4>Dodaj wpis</h4>
+        <form id="packagingForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataDostawyOpakowania">Data dostawy</label>
+              <input type="date" id="dataDostawyOpakowania" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="rodzajOpakowania">Rodzaj opakowania</label>
+              <input type="text" id="rodzajOpakowania" placeholder="np. Worki próżniowe" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="dostawcaOpakowania">Dostawca</label>
+              <input type="text" id="dostawcaOpakowania" placeholder="Nazwa dostawcy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="czyAtest">Czy posiada atest?</label>
+              <select id="czyAtest" required>
+                <option value="">Wybierz...</option>
+                <option value="TAK">TAK</option>
+                <option value="NIE">NIE</option>
+              </select>
+            </div>
+
+            <div class="form-group required">
+              <label for="iloscOpakowania">Ilość</label>
+              <input type="number" id="iloscOpakowania" step="1" min="0" placeholder="0" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="wynikKontroliOpakowania">Wynik kontroli jakości</label>
+              <select id="wynikKontroliOpakowania" required>
+                <option value="">Wybierz...</option>
+                <option value="OK">OK</option>
+                <option value="Nie OK">Nie OK</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="uwagiOpakowania">Uwagi</label>
+              <textarea id="uwagiOpakowania" placeholder="Opcjonalne uwagi..."></textarea>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpisOpakowania">Podpis osoby kontrolującej</label>
+              <input type="text" id="podpisOpakowania" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearPackagingForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportPackagingToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data dostawy</th>
+              <th>Rodzaj opakowania</th>
+              <th>Dostawca</th>
+              <th>Czy posiada atest?</th>
+              <th>Ilość</th>
+              <th>Wynik kontroli jakości</th>
+              <th>Uwagi</th>
+              <th>Podpis osoby kontrolującej</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="packagingTableBody">
+            <tr class="empty-state">
+              <td colspan="10">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
   </main>
 
@@ -650,6 +744,7 @@
     const DELIVERY_STORAGE_KEY = 'zm_surowiec_registry';
     const TEMPERATURE_STORAGE_KEY = 'zm_temperature_registry';
     const UPPZ_STORAGE_KEY = 'zm_uppz_registry';
+    const PACKAGING_STORAGE_KEY = 'zm_packaging_registry';
 
     // Tab switching
     function switchTab(tabName) {
@@ -667,6 +762,7 @@
       loadDeliveryRegistry();
       loadTemperatureRegistry();
       loadUppzRegistry();
+      loadPackagingRegistry();
       setupDeliveryValidation();
     });
 
@@ -1003,6 +1099,114 @@
       });
 
       downloadCSV(csv, 'rejestr_uppz');
+    }
+
+    // ===== PACKAGING REGISTRY =====
+    document.getElementById('packagingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = {
+        dataDostawy: document.getElementById('dataDostawyOpakowania').value,
+        rodzajOpakowania: document.getElementById('rodzajOpakowania').value,
+        dostawca: document.getElementById('dostawcaOpakowania').value,
+        czyAtest: document.getElementById('czyAtest').value,
+        ilosc: document.getElementById('iloscOpakowania').value,
+        wynikKontroli: document.getElementById('wynikKontroliOpakowania').value,
+        uwagi: document.getElementById('uwagiOpakowania').value,
+        podpis: document.getElementById('podpisOpakowania').value,
+        timestamp: new Date().toISOString()
+      };
+
+      savePackagingEntry(formData);
+      clearPackagingForm();
+      loadPackagingRegistry();
+      alert('Wpis został dodany pomyślnie!');
+    });
+
+    function savePackagingEntry(entry) {
+      let registry = getPackagingRegistry();
+      registry.push(entry);
+      localStorage.setItem(PACKAGING_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getPackagingRegistry() {
+      const data = localStorage.getItem(PACKAGING_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadPackagingRegistry() {
+      const registry = getPackagingRegistry();
+      const tbody = document.getElementById('packagingTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="10">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      registry.forEach((entry, index) => {
+        const row = document.createElement('tr');
+
+        // Color-code quality control result
+        let wynikClass = '';
+        if (entry.wynikKontroli === 'OK') {
+          wynikClass = 'result-positive';
+        } else if (entry.wynikKontroli === 'Nie OK') {
+          wynikClass = 'result-negative';
+        }
+
+        // Color-code atest
+        let atestClass = '';
+        if (entry.czyAtest === 'TAK') {
+          atestClass = 'result-positive';
+        } else if (entry.czyAtest === 'NIE') {
+          atestClass = 'result-negative';
+        }
+
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${formatDate(entry.dataDostawy)}</td>
+          <td>${escapeHtml(entry.rodzajOpakowania)}</td>
+          <td>${escapeHtml(entry.dostawca)}</td>
+          <td class="${atestClass}">${escapeHtml(entry.czyAtest)}</td>
+          <td>${parseInt(entry.ilosc)}</td>
+          <td class="${wynikClass}">${escapeHtml(entry.wynikKontroli)}</td>
+          <td>${escapeHtml(entry.uwagi)}</td>
+          <td>${escapeHtml(entry.podpis)}</td>
+          <td class="no-print">
+            <button class="action-btn" onclick="deletePackagingEntry(${index})" title="Usuń wpis">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deletePackagingEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        let registry = getPackagingRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(PACKAGING_STORAGE_KEY, JSON.stringify(registry));
+        loadPackagingRegistry();
+      }
+    }
+
+    function clearPackagingForm() {
+      document.getElementById('packagingForm').reset();
+    }
+
+    function exportPackagingToCSV() {
+      const registry = getPackagingRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Lp.,Data dostawy,Rodzaj opakowania,Dostawca,Czy posiada atest?,Ilość,Wynik kontroli jakości,Uwagi,Podpis osoby kontrolującej\n';
+      registry.forEach((entry, index) => {
+        csv += `${index + 1},"${entry.dataDostawy}","${entry.rodzajOpakowania}","${entry.dostawca}","${entry.czyAtest}",${entry.ilosc},"${entry.wynikKontroli}","${entry.uwagi}","${entry.podpis}"\n`;
+      });
+
+      downloadCSV(csv, 'rejestr_opakowan');
     }
 
     // ===== UTILITY FUNCTIONS =====
