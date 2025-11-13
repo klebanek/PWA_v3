@@ -1,11 +1,12 @@
-// Service Worker for INOVIT e-Segregator PWA
-const CACHE_VERSION = 'v1.4.0';
-const CACHE_NAME = `inovit-esegregator-${CACHE_VERSION}`;
+// Service Worker for Wędliny z Tradycją - System HACCP
+const CACHE_VERSION = 'v2.1.0';
+const CACHE_NAME = `wedliny-z-tradycja-zm-${CACHE_VERSION}`;
 
 // Files to cache
 const urlsToCache = [
   './',
   './index.html',
+  './login.html',
   './centrum.html',
   './wprowadzenie.html',
   './opis_zakladu.html',
