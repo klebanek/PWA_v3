@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Rejestr dostaw surowca mięsnego">
+  <meta name="description" content="Rejestry HACCP">
   <meta name="theme-color" content="#007380">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,8 +12,62 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
-  <title>Rejestr Dostaw Surowca - Wędliny z Tradycją</title>
+  <title>Rejestry HACCP - Wędliny z Tradycją</title>
   <style>
+    /* Tabs Navigation */
+    .tabs-container {
+      background: rgba(0, 79, 93, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px;
+      margin: 30px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-button {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 115, 128, 0.3);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .tab-button:hover {
+      border-color: var(--accent-color);
+      background: rgba(0, 229, 255, 0.1);
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .registry-section {
+      display: none;
+    }
+
+    .registry-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .registry-container {
       max-width: 100%;
       overflow-x: auto;
@@ -151,10 +205,6 @@
       background: rgba(0, 229, 255, 0.05);
     }
 
-    .registry-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-
     .result-positive {
       color: #22c55e;
       font-weight: 700;
@@ -195,21 +245,24 @@
       display: none;
     }
 
-    .instructions {
-      background: rgba(0, 229, 255, 0.05);
-      border-left: 4px solid var(--accent-color);
-      padding: 20px;
-      margin: 30px 0;
+    .temp-room-section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 115, 128, 0.2);
       border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
     }
 
-    .instructions h3 {
-      color: var(--primary-color);
-      margin-top: 0;
+    .temp-room-section h4 {
+      color: var(--accent-color);
+      margin: 0 0 15px 0;
+      font-size: 1rem;
     }
 
-    .instructions ul {
-      line-height: 1.8;
+    .temp-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
     }
 
     @media print {
@@ -218,12 +271,9 @@
       .action-btn,
       header,
       footer,
-      .back-link {
+      .back-link,
+      .tabs-container {
         display: none !important;
-      }
-
-      .registry-table {
-        box-shadow: none;
       }
     }
 
@@ -232,14 +282,14 @@
         grid-template-columns: 1fr;
       }
 
-      .registry-container {
-        font-size: 0.85rem;
-      }
-
       .registry-table th,
       .registry-table td {
         padding: 8px 5px;
         font-size: 0.8rem;
+      }
+
+      .tab-button {
+        min-width: 100%;
       }
     }
   </style>
@@ -251,128 +301,257 @@
   </header>
 
   <main class="content-section">
-    <h2>REJESTR DOSTAW SUROWCA MIĘSNEGO</h2>
+    <h2>REJESTRY I ZAPISY HACCP</h2>
 
-    <!-- Form for adding new entries -->
-    <div class="form-container">
-      <h3>Dodaj nowy wpis</h3>
-      <form id="deliveryForm">
-        <div class="form-grid">
-          <div class="form-group required">
-            <label for="dataDostawy">Data dostawy</label>
-            <input type="date" id="dataDostawy" name="dataDostawy" required>
-            <span class="error-message" id="error-dataDostawy">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="nazwaDostawcy">Nazwa dostawcy</label>
-            <input type="text" id="nazwaDostawcy" name="nazwaDostawcy" placeholder="Wprowadź nazwę dostawcy" required>
-            <span class="error-message" id="error-nazwaDostawcy">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="nazwaSurowca">Nazwa surowca</label>
-            <input type="text" id="nazwaSurowca" name="nazwaSurowca" placeholder="np. Półtusze wieprzowe" required>
-            <span class="error-message" id="error-nazwaSurowca">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="ilosc">Ilość [kg]</label>
-            <input type="number" id="ilosc" name="ilosc" step="0.01" min="0" placeholder="0.00" required>
-            <span class="error-message" id="error-ilosc">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="numerPartii">Numer partii</label>
-            <input type="text" id="numerPartii" name="numerPartii" placeholder="Wprowadź numer partii" required>
-            <span class="error-message" id="error-numerPartii">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="numerHDI">Numer HDI</label>
-            <input type="text" id="numerHDI" name="numerHDI" placeholder="Wprowadź numer HDI" required>
-            <span class="error-message" id="error-numerHDI">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="wynikiKontroli">Wyniki kontroli</label>
-            <select id="wynikiKontroli" name="wynikiKontroli" required>
-              <option value="">Wybierz wynik...</option>
-              <option value="+">+ (Pozytywny)</option>
-              <option value="-">- (Negatywny)</option>
-            </select>
-            <span class="error-message" id="error-wynikiKontroli">To pole jest wymagane</span>
-          </div>
-
-          <div class="form-group" id="uwagiGroup">
-            <label for="uwagi">Uwagi</label>
-            <textarea id="uwagi" name="uwagi" placeholder="Dodatkowe uwagi..."></textarea>
-            <span class="error-message" id="error-uwagi">Uwagi są wymagane dla wyniku negatywnego</span>
-          </div>
-
-          <div class="form-group required">
-            <label for="podpis">Podpis osoby przyjmującej</label>
-            <input type="text" id="podpis" name="podpis" placeholder="Imię i nazwisko" required>
-            <span class="error-message" id="error-podpis">To pole jest wymagane</span>
-          </div>
-        </div>
-
-        <div class="btn-container">
-          <button type="submit" class="btn btn-primary">Dodaj wpis</button>
-          <button type="button" class="btn btn-secondary" onclick="clearForm()">Wyczyść formularz</button>
-          <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj rejestr</button>
-          <button type="button" class="btn btn-secondary" onclick="exportToCSV()">Eksportuj do CSV</button>
-        </div>
-      </form>
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <button class="tab-button active" onclick="switchTab('surowce')">
+        REJESTR DOSTAW SUROWCA
+      </button>
+      <button class="tab-button" onclick="switchTab('temperatury')">
+        REJESTR TEMPERATUR POMIESZCZEŃ
+      </button>
     </div>
 
-    <!-- Registry Table -->
-    <div class="registry-container">
-      <table class="registry-table" id="registryTable">
-        <thead>
-          <tr>
-            <th>Lp.</th>
-            <th>Data dostawy</th>
-            <th>Nazwa dostawcy</th>
-            <th>Nazwa surowca</th>
-            <th>Ilość [kg]</th>
-            <th>Numer partii</th>
-            <th>Numer HDI</th>
-            <th>Wyniki kontroli</th>
-            <th>Uwagi</th>
-            <th>Podpis osoby przyjmującej</th>
-            <th class="no-print">Akcje</th>
-          </tr>
-        </thead>
-        <tbody id="registryBody">
-          <tr class="empty-state">
-            <td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Registry 1: Dostaw surowca mięsnego -->
+    <div id="registry-surowce" class="registry-section active">
+      <h3>REJESTR DOSTAW SUROWCA MIĘSNEGO</h3>
+
+      <div class="form-container">
+        <h4>Dodaj nowy wpis</h4>
+        <form id="deliveryForm">
+          <div class="form-grid">
+            <div class="form-group required">
+              <label for="dataDostawy">Data dostawy</label>
+              <input type="date" id="dataDostawy" name="dataDostawy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nazwaDostawcy">Nazwa dostawcy</label>
+              <input type="text" id="nazwaDostawcy" placeholder="Wprowadź nazwę dostawcy" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="nazwaSurowca">Nazwa surowca</label>
+              <input type="text" id="nazwaSurowca" placeholder="np. Półtusze wieprzowe" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="ilosc">Ilość [kg]</label>
+              <input type="number" id="ilosc" step="0.01" min="0" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="numerPartii">Numer partii</label>
+              <input type="text" id="numerPartii" placeholder="Wprowadź numer partii" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="numerHDI">Numer HDI</label>
+              <input type="text" id="numerHDI" placeholder="Wprowadź numer HDI" required>
+            </div>
+
+            <div class="form-group required">
+              <label for="wynikiKontroli">Wyniki kontroli</label>
+              <select id="wynikiKontroli" required>
+                <option value="">Wybierz wynik...</option>
+                <option value="+">+ (Pozytywny)</option>
+                <option value="-">- (Negatywny)</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="uwagiGroup">
+              <label for="uwagi">Uwagi</label>
+              <textarea id="uwagi" placeholder="Dodatkowe uwagi..."></textarea>
+              <span class="error-message" id="error-uwagi">Uwagi są wymagane dla wyniku negatywnego</span>
+            </div>
+
+            <div class="form-group required">
+              <label for="podpis">Podpis osoby przyjmującej</label>
+              <input type="text" id="podpis" placeholder="Imię i nazwisko" required>
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+            <button type="button" class="btn btn-secondary" onclick="clearDeliveryForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportDeliveryToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Lp.</th>
+              <th>Data dostawy</th>
+              <th>Nazwa dostawcy</th>
+              <th>Nazwa surowca</th>
+              <th>Ilość [kg]</th>
+              <th>Numer partii</th>
+              <th>Numer HDI</th>
+              <th>Wyniki kontroli</th>
+              <th>Uwagi</th>
+              <th>Podpis</th>
+              <th class="no-print">Akcje</th>
+            </tr>
+          </thead>
+          <tbody id="deliveryTableBody">
+            <tr class="empty-state">
+              <td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Instructions -->
-    <div class="instructions">
-      <h3>Instrukcja wypełniania rejestru</h3>
-      <ul>
-        <li><strong>Data dostawy:</strong> Wprowadź datę otrzymania surowca do zakładu.</li>
-        <li><strong>Nazwa dostawcy:</strong> Pełna nazwa firmy dostarczającej surowiec.</li>
-        <li><strong>Nazwa surowca:</strong> Określenie rodzaju surowca mięsnego (np. półtusze wieprzowe, mięso wołowe, podroby drobiowe).</li>
-        <li><strong>Ilość [kg]:</strong> Masa surowca w kilogramach z dokładnością do dwóch miejsc po przecinku.</li>
-        <li><strong>Numer partii:</strong> Numer identyfikacyjny partii surowca od dostawcy.</li>
-        <li><strong>Numer HDI:</strong> Numer dokumentu handlowego identyfikującego dostawę.</li>
-        <li><strong>Wyniki kontroli:</strong> Oznaczenie "+" (pozytywny) lub "-" (negatywny) na podstawie kontroli:
-          <ul>
-            <li>Temperatury (półtusze i mięso ≤ 7°C, podroby ≤ 3°C, mięso drobiowe ≤ 4°C)</li>
-            <li>Stanu organoleptycznego (wygląd, zapach, konsystencja)</li>
-            <li>Kompletności dokumentacji (świadectwa weterynaryjne, certyfikaty)</li>
-          </ul>
-        </li>
-        <li><strong>Uwagi:</strong> W przypadku wyniku negatywnego (-) WYMAGANE jest podanie przyczyny odrzucenia lub podjętych działań naprawczych.</li>
-        <li><strong>Podpis osoby przyjmującej:</strong> Imię i nazwisko pracownika odpowiedzialnego za przyjęcie surowca.</li>
-      </ul>
-      <p><strong>Ważne:</strong> Rejestr musi być dostępny podczas audytów wewnętrznych i zewnętrznych. Wszystkie wpisy są zapisywane lokalnie w przeglądarce.</p>
+    <!-- Registry 2: Temperatur pomieszczeń -->
+    <div id="registry-temperatury" class="registry-section">
+      <h3>REJESTR TEMPERATUR POMIESZCZEŃ TECHNOLOGICZNYCH</h3>
+
+      <div class="form-container">
+        <h4>Dodaj pomiar dzienny</h4>
+        <form id="temperatureForm">
+          <div class="form-group required" style="max-width: 300px; margin-bottom: 25px;">
+            <label for="dataPomiaru">Data pomiaru</label>
+            <input type="date" id="dataPomiaru" required>
+          </div>
+
+          <!-- Chłodnia surowca -->
+          <div class="temp-room-section">
+            <h4>Chłodnia surowca</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_chlodnia_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_chlodnia_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_chlodnia" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Magazyn mięsa po rozbiorze -->
+          <div class="temp-room-section">
+            <h4>Magazyn mięsa po rozbiorze</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_magazyn_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_magazyn_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_magazyn" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Peklownia -->
+          <div class="temp-room-section">
+            <h4>Peklownia</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_peklownia_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_peklownia_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_peklownia" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Magazyn produktów gotowych -->
+          <div class="temp-room-section">
+            <h4>Magazyn produktów gotowych</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_produkty_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_produkty_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_produkty" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <!-- Rozbiór i obróbka mechaniczna -->
+          <div class="temp-room-section">
+            <h4>Rozbiór i obróbka mechaniczna</h4>
+            <div class="temp-inputs">
+              <div class="form-group required">
+                <label>Temperatura rano (°C)</label>
+                <input type="number" id="temp_rozbior_rano" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group required">
+                <label>Temperatura koniec zmiany (°C)</label>
+                <input type="number" id="temp_rozbior_koniec" step="0.1" placeholder="0.0" required>
+              </div>
+              <div class="form-group">
+                <label>Uwagi</label>
+                <input type="text" id="uwagi_rozbior" placeholder="Opcjonalne uwagi">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group required" style="max-width: 400px; margin-top: 20px;">
+            <label for="podpisPomiar">Podpis osoby kontrolującej</label>
+            <input type="text" id="podpisPomiar" placeholder="Imię i nazwisko" required>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Zapisz pomiar dzienny</button>
+            <button type="button" class="btn btn-secondary" onclick="clearTemperatureForm()">Wyczyść formularz</button>
+            <button type="button" class="btn btn-secondary" onclick="exportTemperatureToCSV()">Eksportuj do CSV</button>
+            <button type="button" class="btn btn-secondary" onclick="window.print()">Drukuj</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="registry-container">
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Lp.</th>
+              <th rowspan="2">Data</th>
+              <th rowspan="2">Pomieszczenie</th>
+              <th colspan="2">Temperatura</th>
+              <th rowspan="2">Uwagi</th>
+              <th rowspan="2">Podpis</th>
+              <th rowspan="2" class="no-print">Akcje</th>
+            </tr>
+            <tr>
+              <th>Rano (°C)</th>
+              <th>Koniec zmiany (°C)</th>
+            </tr>
+          </thead>
+          <tbody id="temperatureTableBody">
+            <tr class="empty-state">
+              <td colspan="8">Brak wpisów. Dodaj pierwszy pomiar używając formularza powyżej.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <p><a href="centrum.html" class="back-link">&larr; Wróć do centrum</a></p>
@@ -382,17 +561,29 @@
 
   <script src="app.js"></script>
   <script>
-    // LocalStorage key for registry data
-    const STORAGE_KEY = 'zm_surowiec_registry';
+    // Storage keys
+    const DELIVERY_STORAGE_KEY = 'zm_surowiec_registry';
+    const TEMPERATURE_STORAGE_KEY = 'zm_temperature_registry';
 
-    // Load registry data on page load
+    // Tab switching
+    function switchTab(tabName) {
+      // Update buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Update sections
+      document.querySelectorAll('.registry-section').forEach(section => section.classList.remove('active'));
+      document.getElementById('registry-' + tabName).classList.add('active');
+    }
+
+    // ===== DELIVERY REGISTRY =====
     document.addEventListener('DOMContentLoaded', function() {
-      loadRegistry();
-      setupFormValidation();
+      loadDeliveryRegistry();
+      loadTemperatureRegistry();
+      setupDeliveryValidation();
     });
 
-    // Form validation setup
-    function setupFormValidation() {
+    function setupDeliveryValidation() {
       const wynikiKontroliSelect = document.getElementById('wynikiKontroli');
       const uwagiGroup = document.getElementById('uwagiGroup');
       const uwagiInput = document.getElementById('uwagi');
@@ -404,19 +595,13 @@
         } else {
           uwagiGroup.classList.remove('required');
           uwagiInput.required = false;
-          document.getElementById('error-uwagi').style.display = 'none';
         }
       });
     }
 
-    // Form submission handler
     document.getElementById('deliveryForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Clear previous errors
-      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-
-      // Get form values
       const formData = {
         dataDostawy: document.getElementById('dataDostawy').value,
         nazwaDostawcy: document.getElementById('nazwaDostawcy').value,
@@ -430,43 +615,31 @@
         timestamp: new Date().toISOString()
       };
 
-      // Validate negative result requires notes
       if (formData.wynikiKontroli === '-' && !formData.uwagi.trim()) {
         document.getElementById('error-uwagi').style.display = 'block';
-        document.getElementById('uwagi').focus();
         return;
       }
 
-      // Save to registry
-      saveEntry(formData);
-
-      // Clear form
-      clearForm();
-
-      // Reload table
-      loadRegistry();
-
-      // Show success feedback
+      saveDeliveryEntry(formData);
+      clearDeliveryForm();
+      loadDeliveryRegistry();
       alert('Wpis został dodany pomyślnie!');
     });
 
-    // Save entry to localStorage
-    function saveEntry(entry) {
-      let registry = getRegistry();
+    function saveDeliveryEntry(entry) {
+      let registry = getDeliveryRegistry();
       registry.push(entry);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(registry));
+      localStorage.setItem(DELIVERY_STORAGE_KEY, JSON.stringify(registry));
     }
 
-    // Get registry from localStorage
-    function getRegistry() {
-      const data = localStorage.getItem(STORAGE_KEY);
+    function getDeliveryRegistry() {
+      const data = localStorage.getItem(DELIVERY_STORAGE_KEY);
       return data ? JSON.parse(data) : [];
     }
 
-    // Load and display registry
-    function loadRegistry() {
-      const registry = getRegistry();
-      const tbody = document.getElementById('registryBody');
+    function loadDeliveryRegistry() {
+      const registry = getDeliveryRegistry();
+      const tbody = document.getElementById('deliveryTableBody');
 
       if (registry.length === 0) {
         tbody.innerHTML = '<tr class="empty-state"><td colspan="11">Brak wpisów. Dodaj pierwszy wpis używając formularza powyżej.</td></tr>';
@@ -490,83 +663,194 @@
           <td>${escapeHtml(entry.uwagi)}</td>
           <td>${escapeHtml(entry.podpis)}</td>
           <td class="no-print">
-            <button class="action-btn" onclick="deleteEntry(${index})" title="Usuń wpis">🗑️</button>
+            <button class="action-btn" onclick="deleteDeliveryEntry(${index})" title="Usuń wpis">🗑️</button>
           </td>
         `;
         tbody.appendChild(row);
       });
     }
 
-    // Delete entry
-    function deleteEntry(index) {
+    function deleteDeliveryEntry(index) {
       if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
-        let registry = getRegistry();
+        let registry = getDeliveryRegistry();
         registry.splice(index, 1);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(registry));
-        loadRegistry();
+        localStorage.setItem(DELIVERY_STORAGE_KEY, JSON.stringify(registry));
+        loadDeliveryRegistry();
       }
     }
 
-    // Clear form
-    function clearForm() {
+    function clearDeliveryForm() {
       document.getElementById('deliveryForm').reset();
       document.getElementById('uwagiGroup').classList.remove('required');
       document.getElementById('uwagi').required = false;
-      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
     }
 
-    // Export to CSV
-    function exportToCSV() {
-      const registry = getRegistry();
-
+    function exportDeliveryToCSV() {
+      const registry = getDeliveryRegistry();
       if (registry.length === 0) {
         alert('Brak danych do eksportu.');
         return;
       }
 
-      // CSV headers
-      let csv = 'Lp.,Data dostawy,Nazwa dostawcy,Nazwa surowca,Ilość [kg],Numer partii,Numer HDI,Wyniki kontroli,Uwagi,Podpis osoby przyjmującej\n';
-
-      // CSV rows
+      let csv = 'Lp.,Data dostawy,Nazwa dostawcy,Nazwa surowca,Ilość [kg],Numer partii,Numer HDI,Wyniki kontroli,Uwagi,Podpis\n';
       registry.forEach((entry, index) => {
         csv += `${index + 1},"${entry.dataDostawy}","${entry.nazwaDostawcy}","${entry.nazwaSurowca}",${entry.ilosc},"${entry.numerPartii}","${entry.numerHDI}","${entry.wynikiKontroli}","${entry.uwagi}","${entry.podpis}"\n`;
       });
 
-      // Create download link
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      downloadCSV(csv, 'rejestr_dostaw_surowca');
+    }
+
+    // ===== TEMPERATURE REGISTRY =====
+    document.getElementById('temperatureForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const dataPomiaru = document.getElementById('dataPomiaru').value;
+      const podpis = document.getElementById('podpisPomiar').value;
+
+      const rooms = [
+        {
+          name: 'Chłodnia surowca',
+          rano: document.getElementById('temp_chlodnia_rano').value,
+          koniec: document.getElementById('temp_chlodnia_koniec').value,
+          uwagi: document.getElementById('uwagi_chlodnia').value
+        },
+        {
+          name: 'Magazyn mięsa po rozbiorze',
+          rano: document.getElementById('temp_magazyn_rano').value,
+          koniec: document.getElementById('temp_magazyn_koniec').value,
+          uwagi: document.getElementById('uwagi_magazyn').value
+        },
+        {
+          name: 'Peklownia',
+          rano: document.getElementById('temp_peklownia_rano').value,
+          koniec: document.getElementById('temp_peklownia_koniec').value,
+          uwagi: document.getElementById('uwagi_peklownia').value
+        },
+        {
+          name: 'Magazyn produktów gotowych',
+          rano: document.getElementById('temp_produkty_rano').value,
+          koniec: document.getElementById('temp_produkty_koniec').value,
+          uwagi: document.getElementById('uwagi_produkty').value
+        },
+        {
+          name: 'Rozbiór i obróbka mechaniczna',
+          rano: document.getElementById('temp_rozbior_rano').value,
+          koniec: document.getElementById('temp_rozbior_koniec').value,
+          uwagi: document.getElementById('uwagi_rozbior').value
+        }
+      ];
+
+      const entry = {
+        data: dataPomiaru,
+        rooms: rooms,
+        podpis: podpis,
+        timestamp: new Date().toISOString()
+      };
+
+      saveTemperatureEntry(entry);
+      clearTemperatureForm();
+      loadTemperatureRegistry();
+      alert('Pomiar dzienny został zapisany!');
+    });
+
+    function saveTemperatureEntry(entry) {
+      let registry = getTemperatureRegistry();
+      registry.push(entry);
+      localStorage.setItem(TEMPERATURE_STORAGE_KEY, JSON.stringify(registry));
+    }
+
+    function getTemperatureRegistry() {
+      const data = localStorage.getItem(TEMPERATURE_STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function loadTemperatureRegistry() {
+      const registry = getTemperatureRegistry();
+      const tbody = document.getElementById('temperatureTableBody');
+
+      if (registry.length === 0) {
+        tbody.innerHTML = '<tr class="empty-state"><td colspan="8">Brak wpisów. Dodaj pierwszy pomiar używając formularza powyżej.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      let rowNumber = 1;
+
+      registry.forEach((entry, entryIndex) => {
+        entry.rooms.forEach((room, roomIndex) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${rowNumber++}</td>
+            <td>${roomIndex === 0 ? formatDate(entry.data) : ''}</td>
+            <td><strong>${escapeHtml(room.name)}</strong></td>
+            <td>${parseFloat(room.rano).toFixed(1)}</td>
+            <td>${parseFloat(room.koniec).toFixed(1)}</td>
+            <td>${escapeHtml(room.uwagi)}</td>
+            <td>${roomIndex === 0 ? escapeHtml(entry.podpis) : ''}</td>
+            <td class="no-print">
+              ${roomIndex === 0 ? `<button class="action-btn" onclick="deleteTemperatureEntry(${entryIndex})" title="Usuń dzień">🗑️</button>` : ''}
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+    }
+
+    function deleteTemperatureEntry(index) {
+      if (confirm('Czy na pewno chcesz usunąć pomiar dla tego dnia (wszystkie pomieszczenia)?')) {
+        let registry = getTemperatureRegistry();
+        registry.splice(index, 1);
+        localStorage.setItem(TEMPERATURE_STORAGE_KEY, JSON.stringify(registry));
+        loadTemperatureRegistry();
+      }
+    }
+
+    function clearTemperatureForm() {
+      document.getElementById('temperatureForm').reset();
+    }
+
+    function exportTemperatureToCSV() {
+      const registry = getTemperatureRegistry();
+      if (registry.length === 0) {
+        alert('Brak danych do eksportu.');
+        return;
+      }
+
+      let csv = 'Data,Pomieszczenie,Temperatura rano (°C),Temperatura koniec zmiany (°C),Uwagi,Podpis\n';
+      registry.forEach(entry => {
+        entry.rooms.forEach(room => {
+          csv += `"${entry.data}","${room.name}",${room.rano},${room.koniec},"${room.uwagi}","${entry.podpis}"\n`;
+        });
+      });
+
+      downloadCSV(csv, 'rejestr_temperatur');
+    }
+
+    // ===== UTILITY FUNCTIONS =====
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('pl-PL');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+
+    function downloadCSV(csvContent, filename) {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
 
       link.setAttribute('href', url);
-      link.setAttribute('download', `rejestr_dostaw_surowca_${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
       link.style.visibility = 'hidden';
 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
-
-    // Format date for display
-    function formatDate(dateString) {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('pl-PL');
-    }
-
-    // Escape HTML to prevent XSS
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // Add CSS for print
-    const style = document.createElement('style');
-    style.textContent = `
-      @media print {
-        .no-print { display: none !important; }
-      }
-    `;
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
