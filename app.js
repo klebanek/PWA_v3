@@ -13,6 +13,7 @@ function initializeApp() {
   setupInstallButton();
   setupOfflineIndicator();
   checkOnlineStatus();
+  setupDarkMode();
 }
 
 // ===== Service Worker Registration =====
@@ -207,6 +208,61 @@ function showNotification(message, type = 'info') {
     notification.style.animation = 'slideOut 0.3s ease';
     setTimeout(() => notification.remove(), 300);
   }, 3000);
+}
+
+// ===== Dark Mode =====
+function setupDarkMode() {
+  // Create dark mode toggle button
+  const darkModeToggle = document.createElement('button');
+  darkModeToggle.id = 'darkModeToggle';
+  darkModeToggle.setAttribute('aria-label', 'Toggle dark mode');
+  darkModeToggle.innerHTML = '🌙';
+  document.body.appendChild(darkModeToggle);
+
+  // Check for saved preference or system preference
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    enableDarkMode();
+  }
+
+  // Toggle button click handler
+  darkModeToggle.addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      disableDarkMode();
+    } else {
+      enableDarkMode();
+    }
+  });
+
+  // Listen for system theme changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      if (e.matches) {
+        enableDarkMode();
+      } else {
+        disableDarkMode();
+      }
+    }
+  });
+}
+
+function enableDarkMode() {
+  document.body.setAttribute('data-theme', 'dark');
+  localStorage.setItem('theme', 'dark');
+  const toggle = document.getElementById('darkModeToggle');
+  if (toggle) toggle.innerHTML = '☀️';
+  console.log('🌙 Dark mode enabled');
+}
+
+function disableDarkMode() {
+  document.body.removeAttribute('data-theme');
+  localStorage.setItem('theme', 'light');
+  const toggle = document.getElementById('darkModeToggle');
+  if (toggle) toggle.innerHTML = '🌙';
+  console.log('☀️ Light mode enabled');
 }
 
 // Log PWA capabilities
