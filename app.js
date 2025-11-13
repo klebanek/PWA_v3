@@ -17,6 +17,7 @@ function initializeApp() {
   setupPageTransitions();
   setupScrollAnimations();
   addRippleEffect();
+  setupFlipCards();
 }
 
 // ===== Service Worker Registration =====
@@ -421,6 +422,58 @@ document.addEventListener('mouseover', (e) => {
   }
 });
 
+// ===== 3D Flip Cards (Mobile Support) =====
+function setupFlipCards() {
+  const flipCards = document.querySelectorAll('.flip-card');
+
+  // Check if it's a touch device
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (isTouchDevice) {
+    flipCards.forEach(card => {
+      let isFlipped = false;
+
+      // Add tap handler for mobile
+      card.addEventListener('click', (e) => {
+        // If clicking on a link, let it navigate
+        if (e.target.tagName === 'A' && e.target.classList.contains('flip-btn')) {
+          return; // Allow link navigation
+        }
+
+        // If clicking on the front card link
+        if (e.target.classList.contains('flip-card-front') ||
+            e.target.closest('.flip-card-front')) {
+          e.preventDefault();
+        }
+
+        // Toggle flip state
+        if (!isFlipped) {
+          card.classList.add('flipped');
+          card.querySelector('.flip-card-inner').style.transform = 'rotateY(180deg)';
+          isFlipped = true;
+        } else {
+          card.classList.remove('flipped');
+          card.querySelector('.flip-card-inner').style.transform = 'rotateY(0deg)';
+          isFlipped = false;
+        }
+      });
+
+      // Reset flip on touch outside
+      document.addEventListener('touchstart', (e) => {
+        if (!card.contains(e.target) && isFlipped) {
+          card.classList.remove('flipped');
+          card.querySelector('.flip-card-inner').style.transform = 'rotateY(0deg)';
+          isFlipped = false;
+        }
+      });
+    });
+
+    console.log('📱 Touch-enabled flip cards activated');
+  } else {
+    console.log('🖱️ Hover-based flip cards activated');
+  }
+}
+
 // Log PWA capabilities
 console.log('📱 INOVIT e-Segregator PWA initialized');
 console.log('Service Worker support:', 'serviceWorker' in navigator);
@@ -428,3 +481,4 @@ console.log('Notification support:', 'Notification' in window);
 console.log('Push support:', 'PushManager' in window);
 console.log('Online status:', navigator.onLine);
 console.log('🎨 Advanced animations enabled');
+console.log('💫 3D Flip cards enabled');

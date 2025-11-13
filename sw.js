@@ -1,5 +1,5 @@
 // Service Worker for INOVIT e-Segregator PWA
-const CACHE_VERSION = 'v1.2.0';
+const CACHE_VERSION = 'v1.3.0';
 const CACHE_NAME = `inovit-esegregator-${CACHE_VERSION}`;
 
 // Files to cache
