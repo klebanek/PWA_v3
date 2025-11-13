@@ -155,7 +155,7 @@ function showUpdateNotification() {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #8B0000;
+    background: #007380;
     color: white;
     padding: 15px 25px;
     border-radius: 8px;
@@ -170,7 +170,7 @@ function showUpdateNotification() {
     <span>🔄 Nowa wersja aplikacji jest dostępna!</span>
     <button id="updateBtn" style="
       background: white;
-      color: #8B0000;
+      color: #007380;
       border: none;
       padding: 8px 16px;
       border-radius: 5px;
@@ -195,7 +195,7 @@ function showNotification(message, type = 'info') {
     position: fixed;
     bottom: 80px;
     right: 20px;
-    background: ${type === 'success' ? '#51cf66' : '#8B0000'};
+    background: ${type === 'success' ? '#51cf66' : '#007380'};
     color: white;
     padding: 15px 20px;
     border-radius: 8px;
