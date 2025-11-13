@@ -1,0 +1,21 @@
+{
+  "name": "Wędliny z Tradycją - System HACCP",
+  "short_name": "HACCP ZM",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#5A0000",
+  "theme_color": "#8B0000",
+  "description": "System HACCP dla zakładu mięsnego Wędliny z Tradycją - Maciej Kossowski.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

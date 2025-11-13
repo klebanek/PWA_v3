@@ -1,0 +1,782 @@
+/* ===== INOVIT e-Segregator - Main Styles ===== */
+
+:root {
+  --primary-color: #004F5D;
+  --secondary-color: #007380;
+  --accent-color: #0097a9;
+  --light-text: #A0D2D8;
+  --bg-color: #f5f5f5;
+  --white: #ffffff;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Mode Variables */
+body[data-theme="dark"] {
+  --primary-color: #00a8c5;
+  --secondary-color: #00bcd4;
+  --accent-color: #26c6da;
+  --light-text: #4dd0e1;
+  --bg-color: #121212;
+  --white: #1e1e1e;
+  --text-color: #e0e0e0;
+  --card-bg: #1e1e1e;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===== Header Styles ===== */
+header {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--light-text);
+}
+
+/* ===== Main Content ===== */
+main {
+  flex: 1;
+  padding: 40px 20px;
+}
+
+main h2 {
+  color: var(--primary-color);
+  margin-bottom: 0.5em;
+  font-size: 24px;
+}
+
+main p {
+  font-size: 18px;
+  color: var(--text-color);
+  margin-bottom: 2em;
+  line-height: 1.6;
+}
+
+main h3 {
+  color: var(--primary-color);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+main ul {
+  color: var(--text-color);
+}
+
+/* ===== Buttons ===== */
+button, .btn {
+  font-size: 1.2em;
+  padding: 15px 30px;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+button:active, .btn:active {
+  transform: translateY(0);
+}
+
+/* ===== Tiles Grid (for centrum.html) ===== */
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tile {
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+  color: var(--white);
+  padding: 30px 25px;
+  min-height: 120px;
+  border-radius: 15px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+}
+
+.tile:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Links ===== */
+.back-link {
+  display: block;
+  margin: 20px auto;
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--accent-color);
+}
+
+/* ===== Footer ===== */
+footer {
+  background-color: var(--primary-color);
+  color: var(--white);
+  padding: 15px;
+  font-size: 12px;
+  margin-top: auto;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== PWA Install Button ===== */
+#installBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 1000;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+#installBtn:hover {
+  background-color: var(--accent-color);
+}
+
+/* ===== Advanced Animations ===== */
+
+/* Fade In Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale Animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Bounce Animation */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Rotate Animation */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Page Transition */
+@keyframes pageTransition {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply Animations to Elements */
+header {
+  animation: fadeInDown 0.6s ease-out;
+}
+
+main {
+  animation: fadeIn 0.8s ease-out;
+}
+
+footer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.tile {
+  animation: scaleIn 0.5s ease-out backwards;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Staggered animation for tiles */
+.tile:nth-child(1) { animation-delay: 0.1s; }
+.tile:nth-child(2) { animation-delay: 0.15s; }
+.tile:nth-child(3) { animation-delay: 0.2s; }
+.tile:nth-child(4) { animation-delay: 0.25s; }
+.tile:nth-child(5) { animation-delay: 0.3s; }
+.tile:nth-child(6) { animation-delay: 0.35s; }
+.tile:nth-child(7) { animation-delay: 0.4s; }
+.tile:nth-child(8) { animation-delay: 0.45s; }
+.tile:nth-child(9) { animation-delay: 0.5s; }
+.tile:nth-child(10) { animation-delay: 0.55s; }
+
+.tile:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced button animations */
+button, .btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button::before, .btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:hover::before, .btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+button:active, .btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* Content section animations */
+.content-section h2 {
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.content-section h3 {
+  animation: fadeInLeft 0.6s ease-out;
+}
+
+.content-section p, .content-section ul {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.content-section li {
+  animation: fadeInLeft 0.5s ease-out backwards;
+}
+
+.content-section li:nth-child(1) { animation-delay: 0.1s; }
+.content-section li:nth-child(2) { animation-delay: 0.15s; }
+.content-section li:nth-child(3) { animation-delay: 0.2s; }
+.content-section li:nth-child(4) { animation-delay: 0.25s; }
+.content-section li:nth-child(5) { animation-delay: 0.3s; }
+.content-section li:nth-child(6) { animation-delay: 0.35s; }
+
+/* Back link animation */
+.back-link {
+  animation: fadeInUp 0.6s ease-out;
+  position: relative;
+}
+
+.back-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.back-link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--card-bg) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    var(--card-bg) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== Offline Indicator ===== */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  z-index: 9999;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.offline-indicator.show {
+  transform: translateY(0);
+}
+
+.online-indicator {
+  background-color: #51cf66;
+}
+
+/* ===== Content Section ===== */
+.content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: left;
+}
+
+.content-section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.content-section ul {
+  list-style-position: inside;
+  line-height: 2;
+}
+
+.content-section strong {
+  color: var(--primary-color);
+}
+
+/* ===== Dark Mode Toggle ===== */
+#darkModeToggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--card-bg);
+  border: 2px solid var(--primary-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--shadow);
+  z-index: 1001;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#darkModeToggle:hover {
+  transform: scale(1.1) rotate(20deg);
+}
+
+#darkModeToggle:active {
+  transform: scale(0.95);
+}
+
+/* Hide install button on mobile when both buttons present */
+@media (max-width: 768px) {
+  #darkModeToggle {
+    top: 10px;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+}
+
+/* ===== Responsive Design ===== */
+
+/* Large Desktop (1400px+) */
+@media (min-width: 1400px) {
+  .tiles-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 60px 40px;
+  }
+
+  .tile {
+    min-height: 140px;
+    font-size: 17px;
+  }
+
+  header h1 {
+    font-size: 32px;
+  }
+
+  header p {
+    font-size: 16px;
+  }
+
+  .content-section {
+    max-width: 900px;
+    padding: 60px 40px;
+  }
+}
+
+/* Desktop (1024px - 1399px) */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .tiles-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+
+  .tile {
+    min-height: 130px;
+  }
+}
+
+/* Tablet Landscape (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tiles-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 30px 20px;
+  }
+
+  .tile {
+    min-height: 110px;
+    font-size: 15px;
+    padding: 25px 20px;
+  }
+
+  header h1 {
+    font-size: 26px;
+  }
+
+  header p {
+    font-size: 13px;
+  }
+
+  .content-section {
+    padding: 40px 30px;
+  }
+
+  #darkModeToggle {
+    top: 15px;
+    right: 15px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Tablet Portrait & Mobile Landscape (481px - 767px) */
+@media (max-width: 767px) {
+  .tiles-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 15px;
+    max-width: 500px;
+  }
+
+  .tile {
+    min-height: 100px;
+    font-size: 14px;
+    padding: 25px 20px;
+  }
+
+  header {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 22px;
+  }
+
+  header p {
+    font-size: 11px;
+  }
+
+  main {
+    padding: 15px 10px;
+  }
+
+  main h2 {
+    font-size: 20px;
+  }
+
+  main p {
+    font-size: 16px;
+  }
+
+  .content-section {
+    padding: 30px 15px;
+  }
+
+  .content-section h2 {
+    font-size: 22px;
+  }
+
+  .content-section h3 {
+    font-size: 18px;
+  }
+
+  button, .btn {
+    font-size: 1em;
+    padding: 12px 24px;
+  }
+
+  #installBtn {
+    bottom: 10px;
+    right: 10px;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  #darkModeToggle {
+    top: 10px;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .back-link {
+    font-size: 14px;
+    margin: 15px auto;
+  }
+
+  footer {
+    padding: 12px;
+    font-size: 11px;
+  }
+}
+
+/* Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  .tiles-grid {
+    padding: 15px 10px;
+    gap: 15px;
+  }
+
+  .tile {
+    min-height: 90px;
+    font-size: 13px;
+    padding: 20px 15px;
+  }
+
+  header h1 {
+    font-size: 20px;
+  }
+
+  header p {
+    font-size: 10px;
+  }
+
+  main h2 {
+    font-size: 18px;
+  }
+
+  main p {
+    font-size: 14px;
+  }
+
+  .content-section {
+    padding: 20px 10px;
+  }
+
+  .content-section h2 {
+    font-size: 20px;
+  }
+
+  .content-section h3 {
+    font-size: 16px;
+  }
+
+  .content-section p,
+  .content-section ul {
+    font-size: 14px;
+  }
+
+  #darkModeToggle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    top: 8px;
+    right: 8px;
+  }
+
+  #installBtn {
+    bottom: 8px;
+    right: 8px;
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets */
+  button, .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
