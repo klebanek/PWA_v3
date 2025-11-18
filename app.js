@@ -62,11 +62,18 @@ const Storage = {
    */
   clearAll() {
     try {
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.startsWith(APP_CONFIG.storagePrefix)) {
-          localStorage.removeItem(key);
+      const keys = [];
+      // Iteruj przez localStorage używając length i key()
+      // Ta metoda działa zarówno w przeglądarkach jak i w środowiskach testowych
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(APP_CONFIG.storagePrefix)) {
+          keys.push(key);
         }
+      }
+      // Usuń znalezione klucze
+      keys.forEach(key => {
+        localStorage.removeItem(key);
       });
       return true;
     } catch (error) {
@@ -79,10 +86,16 @@ const Storage = {
    * Zwraca wszystkie klucze aplikacji
    */
   getAllKeys() {
-    const keys = Object.keys(localStorage);
-    return keys
-      .filter(key => key.startsWith(APP_CONFIG.storagePrefix))
-      .map(key => key.replace(APP_CONFIG.storagePrefix, ''));
+    const keys = [];
+    // Iteruj przez localStorage używając length i key()
+    // Ta metoda działa zarówno w przeglądarkach jak i w środowiskach testowych
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(APP_CONFIG.storagePrefix)) {
+        keys.push(key.replace(APP_CONFIG.storagePrefix, ''));
+      }
+    }
+    return keys;
   }
 };
 
