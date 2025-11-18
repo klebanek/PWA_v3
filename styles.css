@@ -95,6 +95,17 @@ header p {
   color: var(--light-text);
 }
 
+/* Logout button styles */
+header button {
+  transition: all 0.3s ease;
+}
+
+header button:hover {
+  background: rgba(239, 68, 68, 1) !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
 /* ===== Main Content ===== */
 main {
   flex: 1;
@@ -648,6 +659,14 @@ button:active, .btn:active {
     height: 45px;
     font-size: 20px;
   }
+
+  /* Adjust logout button position for mobile */
+  header button[onclick="logout()"] {
+    top: 10px !important;
+    right: 70px !important;
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
 }
 
 /* ===== Responsive Design ===== */
@@ -859,6 +878,14 @@ button:active, .btn:active {
     font-size: 18px;
     top: 8px;
     right: 8px;
+  }
+
+  /* Adjust logout button for small mobile */
+  header button[onclick="logout()"] {
+    top: 8px !important;
+    right: 58px !important;
+    padding: 5px 10px !important;
+    font-size: 0.75rem !important;
   }
 
   #installBtn {
