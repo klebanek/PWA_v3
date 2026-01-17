@@ -1,9 +1,631 @@
-
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Rejestry</title></head>
-<body style="font-family:'Segoe UI',sans-serif;padding:40px;text-align:center;">
-<h2>Rejestry</h2>
-<p>Tutaj możesz dodać zawartość tej sekcji.</p>
-<p><a href="centrum.html" style="color:#007380;font-weight:bold;">&larr; Wróć do centrum</a></p>
-</body></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#004F5D">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <title>Rejestry i zapisy HACCP</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      padding-bottom: 40px;
+    }
+    header {
+      background-color: #004F5D;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+    header p {
+      font-size: 14px;
+      color: #A0D2D8;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      color: #004F5D;
+      margin-bottom: 15px;
+      font-size: 22px;
+      border-bottom: 2px solid #007380;
+      padding-bottom: 10px;
+    }
+    .registry-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .registry-btn {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .registry-btn:hover {
+      background-color: #5a6268;
+    }
+    .registry-btn.active {
+      background-color: #007380;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      color: #004F5D;
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #007380;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .btn {
+      background-color: #007380;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background-color: #0097a9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,115,128,0.3);
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .btn-success {
+      background-color: #28a745;
+    }
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    table th {
+      background-color: #004F5D;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+    table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+    table tr:hover {
+      background-color: #f8f9fa;
+    }
+    .action-btns {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-small {
+      padding: 5px 10px;
+      font-size: 12px;
+      margin: 0;
+    }
+    .back-link {
+      display: inline-block;
+      margin: 20px 0;
+      color: #007380;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #6c757d;
+    }
+    .stats {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #007380 0%, #0097a9 100%);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 150px;
+    }
+    .stat-card h3 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    .stat-card p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    footer {
+      background-color: #004F5D;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      font-size: 12px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 10px;
+      }
+      .card {
+        padding: 15px;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .btn {
+        width: 100%;
+        margin-right: 0;
+      }
+      table {
+        font-size: 12px;
+      }
+      table th, table td {
+        padding: 8px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>REJESTRY I ZAPISY HACCP</h1>
+    <p>Dokumentacja i monitoring</p>
+  </header>
+
+  <div class="container">
+    <a href="centrum.html" class="back-link">&larr; Wróć do centrum</a>
+
+    <!-- Statystyki -->
+    <div class="stats">
+      <div class="stat-card">
+        <h3 id="totalEntries">0</h3>
+        <p>Łącznie wpisów</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="todayEntries">0</h3>
+        <p>Dzisiejsze wpisy</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="currentRegistry">-</h3>
+        <p>Aktywny rejestr</p>
+      </div>
+    </div>
+
+    <!-- Wybór rejestru -->
+    <div class="card">
+      <h2>Wybierz rejestr</h2>
+      <div class="registry-selector">
+        <button class="registry-btn" onclick="selectRegistry('temperature')">Temperatura</button>
+        <button class="registry-btn" onclick="selectRegistry('hygiene')">Higiena</button>
+        <button class="registry-btn" onclick="selectRegistry('pests')">Kontrola szkodników</button>
+        <button class="registry-btn" onclick="selectRegistry('maintenance')">Konserwacja</button>
+        <button class="registry-btn" onclick="selectRegistry('training')">Szkolenia</button>
+        <button class="registry-btn" onclick="selectRegistry('suppliers')">Dostawcy</button>
+      </div>
+    </div>
+
+    <!-- Formularz dodawania wpisu -->
+    <div class="card" id="entryForm" style="display:none;">
+      <h2 id="formTitle">Dodaj wpis</h2>
+      <form id="registryForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="entryDate">Data *</label>
+            <input type="date" id="entryDate" required>
+          </div>
+          <div class="form-group">
+            <label for="entryTime">Godzina *</label>
+            <input type="time" id="entryTime" required>
+          </div>
+          <div class="form-group">
+            <label for="entryResponsible">Osoba odpowiedzialna *</label>
+            <input type="text" id="entryResponsible" placeholder="Imię i nazwisko" required>
+          </div>
+        </div>
+
+        <!-- Pola dynamiczne w zależności od typu rejestru -->
+        <div id="dynamicFields"></div>
+
+        <div class="form-group">
+          <label for="entryNotes">Uwagi</label>
+          <textarea id="entryNotes" rows="3" placeholder="Dodatkowe uwagi..."></textarea>
+        </div>
+
+        <button type="submit" class="btn">Zapisz wpis</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Anuluj</button>
+      </form>
+    </div>
+
+    <!-- Lista wpisów -->
+    <div class="card" id="entriesList" style="display:none;">
+      <h2>
+        Lista wpisów
+        <span style="float:right; font-size:14px;">
+          <button class="btn btn-success btn-small" onclick="exportRegistry()">Eksportuj CSV</button>
+          <button class="btn btn-danger btn-small" onclick="clearRegistry()">Wyczyść rejestr</button>
+        </span>
+      </h2>
+      <div class="table-container">
+        <table id="entriesTable">
+          <thead>
+            <tr id="tableHeader"></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <p>Brak wpisów w tym rejestrze</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    INOVIT © 2025 - Profesjonalne rozwiązania HACCP
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    // Rejestracja Service Workera
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker aktywny'))
+        .catch(err => console.error('Błąd SW:', err));
+    }
+
+    // Globalne zmienne
+    let currentRegistry = null;
+    let editingEntryId = null;
+
+    // Definicje pól dla różnych rejestrów
+    const registryFields = {
+      temperature: [
+        { name: 'location', label: 'Miejsce pomiaru', type: 'text', required: true },
+        { name: 'temperature', label: 'Temperatura (°C)', type: 'number', required: true, step: '0.1' },
+        { name: 'status', label: 'Status', type: 'select', options: ['OK', 'Przekroczenie'], required: true }
+      ],
+      hygiene: [
+        { name: 'area', label: 'Obszar', type: 'text', required: true },
+        { name: 'checkType', label: 'Rodzaj kontroli', type: 'select', options: ['Mycie', 'Dezynfekcja', 'Kontrola wizualna'], required: true },
+        { name: 'result', label: 'Wynik', type: 'select', options: ['Pozytywny', 'Negatywny'], required: true }
+      ],
+      pests: [
+        { name: 'location', label: 'Lokalizacja', type: 'text', required: true },
+        { name: 'pestType', label: 'Rodzaj szkodnika', type: 'select', options: ['Gryzonie', 'Owady', 'Ptaki', 'Brak'], required: true },
+        { name: 'action', label: 'Podjęte działanie', type: 'text', required: false }
+      ],
+      maintenance: [
+        { name: 'equipment', label: 'Urządzenie', type: 'text', required: true },
+        { name: 'maintenanceType', label: 'Typ konserwacji', type: 'select', options: ['Przegląd', 'Naprawa', 'Czyszczenie', 'Kalibracja'], required: true },
+        { name: 'status', label: 'Status', type: 'select', options: ['Wykonane', 'W trakcie', 'Planowane'], required: true }
+      ],
+      training: [
+        { name: 'topic', label: 'Temat szkolenia', type: 'text', required: true },
+        { name: 'participants', label: 'Liczba uczestników', type: 'number', required: true },
+        { name: 'trainer', label: 'Prowadzący', type: 'text', required: true }
+      ],
+      suppliers: [
+        { name: 'supplierName', label: 'Nazwa dostawcy', type: 'text', required: true },
+        { name: 'product', label: 'Produkt', type: 'text', required: true },
+        { name: 'quality', label: 'Ocena jakości', type: 'select', options: ['Bardzo dobra', 'Dobra', 'Średnia', 'Słaba'], required: true }
+      ]
+    };
+
+    // Inicjalizacja
+    document.getElementById('entryDate').value = InovitApp.DateTime.getCurrentDate();
+    document.getElementById('entryTime').value = InovitApp.DateTime.getCurrentTime();
+    updateStats();
+
+    // Wybór rejestru
+    function selectRegistry(registryName) {
+      currentRegistry = registryName;
+      editingEntryId = null;
+
+      // Aktualizuj przyciski
+      document.querySelectorAll('.registry-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Pokaż formularz i listę
+      document.getElementById('entryForm').style.display = 'block';
+      document.getElementById('entriesList').style.display = 'block';
+      document.getElementById('formTitle').textContent = 'Dodaj wpis';
+
+      // Generuj dynamiczne pola
+      generateDynamicFields(registryName);
+
+      // Załaduj wpisy
+      loadEntries();
+      updateStats();
+    }
+
+    // Generowanie dynamicznych pól
+    function generateDynamicFields(registryName) {
+      const container = document.getElementById('dynamicFields');
+      container.innerHTML = '';
+
+      const fields = registryFields[registryName];
+      const row = document.createElement('div');
+      row.className = 'form-row';
+
+      fields.forEach(field => {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+
+        const label = document.createElement('label');
+        label.textContent = field.label + (field.required ? ' *' : '');
+        label.setAttribute('for', field.name);
+
+        let input;
+        if (field.type === 'select') {
+          input = document.createElement('select');
+          field.options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option;
+            opt.textContent = option;
+            input.appendChild(opt);
+          });
+        } else {
+          input = document.createElement('input');
+          input.type = field.type;
+          if (field.step) input.step = field.step;
+        }
+
+        input.id = field.name;
+        input.name = field.name;
+        input.required = field.required;
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(input);
+        row.appendChild(formGroup);
+      });
+
+      container.appendChild(row);
+    }
+
+    // Obsługa formularza
+    document.getElementById('registryForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveEntry();
+    });
+
+    function saveEntry() {
+      const data = {
+        date: document.getElementById('entryDate').value,
+        time: document.getElementById('entryTime').value,
+        responsible: document.getElementById('entryResponsible').value,
+        notes: document.getElementById('entryNotes').value
+      };
+
+      // Dodaj dynamiczne pola
+      const fields = registryFields[currentRegistry];
+      fields.forEach(field => {
+        const element = document.getElementById(field.name);
+        data[field.name] = element.value;
+      });
+
+      if (editingEntryId) {
+        // Edycja
+        InovitApp.Registry.updateEntry(currentRegistry, editingEntryId, data);
+        InovitApp.Notifications.success('Wpis zaktualizowany');
+      } else {
+        // Nowy wpis
+        InovitApp.Registry.addEntry(currentRegistry, data);
+        InovitApp.Notifications.success('Wpis dodany');
+      }
+
+      // Reset formularza
+      document.getElementById('registryForm').reset();
+      document.getElementById('entryDate').value = InovitApp.DateTime.getCurrentDate();
+      document.getElementById('entryTime').value = InovitApp.DateTime.getCurrentTime();
+      editingEntryId = null;
+      document.getElementById('formTitle').textContent = 'Dodaj wpis';
+
+      loadEntries();
+      updateStats();
+    }
+
+    function cancelEdit() {
+      editingEntryId = null;
+      document.getElementById('formTitle').textContent = 'Dodaj wpis';
+      document.getElementById('registryForm').reset();
+      document.getElementById('entryDate').value = InovitApp.DateTime.getCurrentDate();
+      document.getElementById('entryTime').value = InovitApp.DateTime.getCurrentTime();
+    }
+
+    // Ładowanie wpisów
+    function loadEntries() {
+      const entries = InovitApp.Registry.getEntries(currentRegistry) || [];
+      const tableHeader = document.getElementById('tableHeader');
+      const tableBody = document.getElementById('tableBody');
+      const emptyState = document.getElementById('emptyState');
+
+      if (entries.length === 0) {
+        emptyState.style.display = 'block';
+        document.getElementById('entriesTable').style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      document.getElementById('entriesTable').style.display = 'table';
+
+      // Nagłówki
+      const fields = registryFields[currentRegistry];
+      tableHeader.innerHTML = '<th>Data</th><th>Godzina</th><th>Osoba</th>';
+      fields.forEach(field => {
+        tableHeader.innerHTML += `<th>${field.label}</th>`;
+      });
+      tableHeader.innerHTML += '<th>Uwagi</th><th>Akcje</th>';
+
+      // Wiersze
+      tableBody.innerHTML = '';
+      entries.reverse().forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${InovitApp.DateTime.formatDatePL(entry.date)}</td>
+          <td>${entry.time}</td>
+          <td>${entry.responsible}</td>
+        `;
+
+        fields.forEach(field => {
+          row.innerHTML += `<td>${entry[field.name] || '-'}</td>`;
+        });
+
+        row.innerHTML += `
+          <td>${entry.notes || '-'}</td>
+          <td class="action-btns">
+            <button class="btn btn-small" onclick="editEntry(${entry.id})">Edytuj</button>
+            <button class="btn btn-danger btn-small" onclick="deleteEntry(${entry.id})">Usuń</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    function editEntry(entryId) {
+      const entries = InovitApp.Registry.getEntries(currentRegistry) || [];
+      const entry = entries.find(e => e.id === entryId);
+
+      if (!entry) return;
+
+      editingEntryId = entryId;
+      document.getElementById('formTitle').textContent = 'Edytuj wpis';
+
+      document.getElementById('entryDate').value = entry.date;
+      document.getElementById('entryTime').value = entry.time;
+      document.getElementById('entryResponsible').value = entry.responsible;
+      document.getElementById('entryNotes').value = entry.notes || '';
+
+      const fields = registryFields[currentRegistry];
+      fields.forEach(field => {
+        const element = document.getElementById(field.name);
+        if (element) element.value = entry[field.name] || '';
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteEntry(entryId) {
+      if (confirm('Czy na pewno chcesz usunąć ten wpis?')) {
+        InovitApp.Registry.removeEntry(currentRegistry, entryId);
+        InovitApp.Notifications.success('Wpis usunięty');
+        loadEntries();
+        updateStats();
+      }
+    }
+
+    function clearRegistry() {
+      if (confirm('Czy na pewno chcesz wyczyścić cały rejestr? Ta operacja jest nieodwracalna!')) {
+        InovitApp.Registry.clearRegistry(currentRegistry);
+        InovitApp.Notifications.success('Rejestr wyczyszczony');
+        loadEntries();
+        updateStats();
+      }
+    }
+
+    function exportRegistry() {
+      const entries = InovitApp.Registry.getEntries(currentRegistry) || [];
+      if (entries.length === 0) {
+        InovitApp.Notifications.error('Brak danych do eksportu');
+        return;
+      }
+
+      const filename = `rejestr_${currentRegistry}_${InovitApp.DateTime.getCurrentDate()}`;
+      InovitApp.Export.toCSV(entries, filename);
+      InovitApp.Notifications.success('Dane wyeksportowane');
+    }
+
+    function updateStats() {
+      let total = 0;
+      let today = 0;
+      const todayDate = InovitApp.DateTime.getCurrentDate();
+
+      if (currentRegistry) {
+        const entries = InovitApp.Registry.getEntries(currentRegistry) || [];
+        total = entries.length;
+        today = entries.filter(e => e.date === todayDate).length;
+      }
+
+      document.getElementById('totalEntries').textContent = total;
+      document.getElementById('todayEntries').textContent = today;
+      document.getElementById('currentRegistry').textContent = currentRegistry ? currentRegistry : '-';
+    }
+  </script>
+</body>
+</html>

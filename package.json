@@ -1,0 +1,24 @@
+{
+  "name": "inovit-esegregator-local",
+  "version": "1.0.0",
+  "description": "INOVIT e-Segregator - Lokalna wersja PWA dla dokumentacji HACCP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "python3 -m http.server 8080",
+    "help": "cat README_LOCAL.md"
+  },
+  "keywords": [
+    "pwa",
+    "haccp",
+    "offline",
+    "local",
+    "documentation"
+  ],
+  "author": "INOVIT",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,9 +1,343 @@
-
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Wprowadzenie</title></head>
-<body style="font-family:'Segoe UI',sans-serif;padding:40px;text-align:center;">
-<h2>Wprowadzenie</h2>
-<p>Tutaj możesz dodać zawartość tej sekcji.</p>
-<p><a href="centrum.html" style="color:#007380;font-weight:bold;">&larr; Wróć do centrum</a></p>
-</body></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#004F5D">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <title>Wprowadzenie do dokumentacji HACCP</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      padding-bottom: 40px;
+    }
+    header {
+      background-color: #004F5D;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+    header p {
+      font-size: 14px;
+      color: #A0D2D8;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      color: #004F5D;
+      margin-bottom: 15px;
+      font-size: 22px;
+      border-bottom: 2px solid #007380;
+      padding-bottom: 10px;
+    }
+    .card h3 {
+      color: #007380;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .card p, .card li {
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .card ul {
+      margin-left: 20px;
+    }
+    .info-box {
+      background-color: #e8f4f8;
+      border-left: 4px solid #007380;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .info-box strong {
+      color: #004F5D;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: #004F5D;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #007380;
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .btn {
+      background-color: #007380;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      background-color: #0097a9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,115,128,0.3);
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .back-link {
+      display: inline-block;
+      margin: 20px 0;
+      color: #007380;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .saved-indicator {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+    footer {
+      background-color: #004F5D;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      font-size: 12px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 15px;
+      }
+      .card {
+        padding: 20px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+      .btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>WPROWADZENIE DO DOKUMENTACJI HACCP</h1>
+    <p>System bezpieczeństwa żywności</p>
+  </header>
+
+  <div class="container">
+    <a href="centrum.html" class="back-link">&larr; Wróć do centrum</a>
+
+    <!-- Sekcja informacyjna -->
+    <div class="card">
+      <h2>Czym jest system HACCP?</h2>
+      <p>
+        <strong>HACCP</strong> (Hazard Analysis and Critical Control Points) to system
+        analizy zagrożeń i krytycznych punktów kontroli, który służy do identyfikacji,
+        oceny i kontroli zagrożeń istotnych dla bezpieczeństwa żywności.
+      </p>
+
+      <h3>7 Zasad HACCP:</h3>
+      <ul>
+        <li><strong>Zasada 1:</strong> Przeprowadzenie analizy zagrożeń</li>
+        <li><strong>Zasada 2:</strong> Określenie krytycznych punktów kontroli (CCP)</li>
+        <li><strong>Zasada 3:</strong> Ustalenie limitów krytycznych</li>
+        <li><strong>Zasada 4:</strong> Ustalenie systemu monitorowania CCP</li>
+        <li><strong>Zasada 5:</strong> Określenie działań korygujących</li>
+        <li><strong>Zasada 6:</strong> Weryfikacja systemu</li>
+        <li><strong>Zasada 7:</strong> Prowadzenie dokumentacji i zapisów</li>
+      </ul>
+
+      <div class="info-box">
+        <strong>Ważne:</strong> System HACCP jest wymagany prawnie dla wszystkich
+        podmiotów zajmujących się produkcją, przetwarzaniem i dystrybucją żywności.
+      </div>
+    </div>
+
+    <!-- Formularz wdrożenia -->
+    <div class="card">
+      <h2>Dane wdrożenia systemu HACCP <span id="savedIndicator"></span></h2>
+
+      <form id="implementationForm">
+        <div class="form-group">
+          <label for="implementationDate">Data wdrożenia systemu HACCP *</label>
+          <input type="date" id="implementationDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="teamLeader">Kierownik zespołu HACCP *</label>
+          <input type="text" id="teamLeader" placeholder="Imię i nazwisko" required>
+        </div>
+
+        <div class="form-group">
+          <label for="teamMembers">Członkowie zespołu HACCP</label>
+          <textarea id="teamMembers" placeholder="Wpisz imiona i nazwiska członków zespołu (każdy w nowej linii)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="scope">Zakres systemu HACCP</label>
+          <textarea id="scope" placeholder="Opisz zakres obowiązywania systemu (np. produkcja pieczywa, magazynowanie surowców, itp.)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="consultingCompany">Firma doradcza (jeśli dotyczy)</label>
+          <input type="text" id="consultingCompany" placeholder="Nazwa firmy">
+        </div>
+
+        <div class="form-group">
+          <label for="certificationBody">Jednostka certyfikująca (jeśli dotyczy)</label>
+          <input type="text" id="certificationBody" placeholder="Nazwa jednostki">
+        </div>
+
+        <div class="form-group">
+          <label for="lastReview">Data ostatniego przeglądu systemu</label>
+          <input type="date" id="lastReview">
+        </div>
+
+        <div class="form-group">
+          <label for="nextReview">Planowana data następnego przeglądu</label>
+          <input type="date" id="nextReview">
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Uwagi dodatkowe</label>
+          <textarea id="notes" placeholder="Dodatkowe informacje o systemie HACCP"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Zapisz dane</button>
+        <button type="button" class="btn btn-secondary" onclick="loadData()">Odśwież dane</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    INOVIT © 2025 - Profesjonalne rozwiązania HACCP
+  </footer>
+
+  <script src="./app.js"></script>
+  <script>
+    // Rejestracja Service Workera
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker aktywny'))
+        .catch(err => console.error('Błąd SW:', err));
+    }
+
+    // Formularz
+    const form = document.getElementById('implementationForm');
+    const savedIndicator = document.getElementById('savedIndicator');
+
+    // Załaduj dane przy starcie
+    loadData();
+
+    // Obsługa zapisu formularza
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveData();
+    });
+
+    function saveData() {
+      const data = {
+        implementationDate: document.getElementById('implementationDate').value,
+        teamLeader: document.getElementById('teamLeader').value,
+        teamMembers: document.getElementById('teamMembers').value,
+        scope: document.getElementById('scope').value,
+        consultingCompany: document.getElementById('consultingCompany').value,
+        certificationBody: document.getElementById('certificationBody').value,
+        lastReview: document.getElementById('lastReview').value,
+        nextReview: document.getElementById('nextReview').value,
+        notes: document.getElementById('notes').value
+      };
+
+      const success = InovitApp.Storage.save('introduction', data);
+
+      if (success) {
+        InovitApp.Notifications.success('Dane zostały zapisane pomyślnie!');
+        showSavedIndicator();
+      } else {
+        InovitApp.Notifications.error('Błąd podczas zapisu danych');
+      }
+    }
+
+    function loadData() {
+      const data = InovitApp.Storage.load('introduction');
+
+      if (data) {
+        document.getElementById('implementationDate').value = data.implementationDate || '';
+        document.getElementById('teamLeader').value = data.teamLeader || '';
+        document.getElementById('teamMembers').value = data.teamMembers || '';
+        document.getElementById('scope').value = data.scope || '';
+        document.getElementById('consultingCompany').value = data.consultingCompany || '';
+        document.getElementById('certificationBody').value = data.certificationBody || '';
+        document.getElementById('lastReview').value = data.lastReview || '';
+        document.getElementById('nextReview').value = data.nextReview || '';
+        document.getElementById('notes').value = data.notes || '';
+
+        showSavedIndicator();
+        InovitApp.Notifications.info('Dane zostały załadowane');
+      }
+    }
+
+    function showSavedIndicator() {
+      savedIndicator.innerHTML = '<span class="saved-indicator">✓ Zapisano</span>';
+      setTimeout(() => {
+        savedIndicator.innerHTML = '';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

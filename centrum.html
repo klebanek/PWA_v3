@@ -3,6 +3,10 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#004F5D">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <title>Centrum dokumentacji HACCP</title>
   <style>
     body {
@@ -38,6 +42,9 @@
     }
     .tile:hover {
       background-color: #0097a9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,115,128,0.3);
+      transition: all 0.3s ease;
     }
     footer {
       background-color: #004F5D;
@@ -52,6 +59,32 @@
       text-decoration: none;
       color: #007380;
       font-weight: bold;
+    }
+    /* Responsywność */
+    @media (max-width: 768px) {
+      main {
+        padding: 20px 10px;
+        gap: 10px;
+      }
+      .tile {
+        width: calc(100% - 40px);
+        max-width: 400px;
+      }
+      header h1 {
+        font-size: 24px;
+      }
+    }
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 20px;
+      }
+      header p {
+        font-size: 12px;
+      }
+      .tile {
+        font-size: 14px;
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -76,5 +109,13 @@
   <footer>
     INOVIT © 2025
   </footer>
+  <script>
+    // Rejestracja Service Workera
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker aktywny'))
+        .catch(err => console.error('Błąd SW:', err));
+    }
+  </script>
 </body>
 </html>

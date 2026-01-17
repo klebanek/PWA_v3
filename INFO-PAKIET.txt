@@ -1,0 +1,149 @@
+═══════════════════════════════════════════════════════════════════════════
+  INOVIT e-Segregator HACCP v1.0.1 - Informacje o pakiecie
+═══════════════════════════════════════════════════════════════════════════
+
+📦 NAZWA PLIKU
+───────────────────────────────────────────────────────────────────────────
+  inovit-esegregator-pwa.zip
+
+
+📊 ROZMIAR
+───────────────────────────────────────────────────────────────────────────
+  Skompresowany:  326 KB
+  Nieskompresowany: ~375 KB
+  Liczba plików: 27
+
+
+🔐 SUMY KONTROLNE (dla weryfikacji integralności)
+───────────────────────────────────────────────────────────────────────────
+  MD5:    dbb4b6a47d28a9ebe1db17e15aef5f94
+  SHA256: fda4fd87680c123e8766bd23cccec8a60fcf287b2a2a96eec454d5754ab29e5f
+
+
+📂 ZAWARTOŚĆ ARCHIWUM
+───────────────────────────────────────────────────────────────────────────
+
+DOKUMENTACJA:
+  ✓ README-WDROZENIE.txt     - Pełna instrukcja wdrożenia (10.6 KB)
+  ✓ SZYBKI-START.txt         - Szybki przewodnik (7.4 KB)
+
+SKRYPTY URUCHAMIAJĄCE:
+  ✓ PWA_v3/start-server.sh   - Skrypt dla Linux/Mac (2.6 KB)
+  ✓ PWA_v3/start-server.bat  - Skrypt dla Windows (2.2 KB)
+
+STRONY HTML (23 pliki):
+  ✓ index.html               - Strona główna
+  ✓ centrum.html             - Centrum nawigacji
+  ✓ wprowadzenie.html        - Wprowadzenie HACCP ✅ FUNKCJONALNE
+  ✓ rejestry.html            - Rejestry i zapisy ✅ FUNKCJONALNE
+  ✓ opis_zakladu.html        - Do rozbudowy
+  ✓ ghp_gmp.html             - Do rozbudowy
+  ✓ schemat.html             - Do rozbudowy
+  ✓ analiza.html             - Do rozbudowy
+  ✓ korekty.html             - Do rozbudowy
+  ✓ szkolenia.html           - Do rozbudowy
+  ✓ audyty.html              - Do rozbudowy
+  ✓ badania.html             - Do rozbudowy
+
+PLIKI JAVASCRIPT:
+  ✓ app.js                   - Główne API aplikacji (10.8 KB)
+  ✓ service-worker.js        - Service Worker PWA (3.6 KB)
+
+ZASOBY:
+  ✓ manifest.json            - Manifest PWA (937 B)
+  ✓ favicon.ico              - Ikona zakładki (2.3 KB)
+  ✓ icon-32.png              - Ikona 32x32 (1.1 KB)
+  ✓ icon-64.png              - Ikona 64x64 (3.6 KB)
+  ✓ icon-128.png             - Ikona 128x128 (13 KB)
+  ✓ icon-192.png             - Ikona 192x192 (27.8 KB)
+  ✓ icon-256.png             - Ikona 256x256 (48.4 KB)
+  ✓ icon-512.png             - Ikona 512x512 (208.6 KB)
+
+
+✨ FUNKCJE APLIKACJI
+───────────────────────────────────────────────────────────────────────────
+  ✅ Progressive Web App     - Instalowalna jako natywna
+  ✅ Service Worker          - Obsługa offline
+  ✅ LocalStorage API        - Lokalne przechowywanie danych
+  ✅ Responsywny design      - Mobile-first approach
+  ✅ 6 typów rejestrów       - Temperatura, higiena, szkodniki, itp.
+  ✅ Eksport CSV             - Pobieranie raportów
+  ✅ CRUD Operations         - Dodawanie, edycja, usuwanie
+  ✅ Statystyki real-time    - Liczniki wpisów
+  ✅ System powiadomień      - Wizualne potwierdzenia
+  ✅ Auto-save               - Automatyczny zapis formularzy
+
+
+🚀 SZYBKIE URUCHOMIENIE
+───────────────────────────────────────────────────────────────────────────
+
+  WINDOWS:
+    1. Wypakuj archiwum
+    2. Otwórz folder PWA_v3
+    3. Dwukrotnie kliknij: start-server.bat
+    4. Otwórz: http://localhost:8000
+
+  LINUX/MAC:
+    1. Wypakuj archiwum
+    2. Otwórz terminal w folderze PWA_v3
+    3. Uruchom: ./start-server.sh
+    4. Otwórz: http://localhost:8000
+
+  ALTERNATYWNIE (ręcznie):
+    cd PWA_v3
+    python -m http.server 8000
+
+
+💻 WYMAGANIA SYSTEMOWE
+───────────────────────────────────────────────────────────────────────────
+  • Przeglądarka: Chrome 67+, Firefox 67+, Safari 11.1+, Edge 79+
+  • Serwer HTTP: Python, Node.js, PHP lub dowolny inny
+  • JavaScript: Włączony
+  • Połączenie: Potrzebne tylko przy pierwszym uruchomieniu
+
+
+📋 WYMAGANIA DO WDROŻENIA PRODUKCYJNEGO
+───────────────────────────────────────────────────────────────────────────
+  ⚠️  HTTPS - Service Worker wymaga bezpiecznego połączenia
+  ✓  Dowolny hosting statyczny (GitHub Pages, Netlify, Vercel, itp.)
+  ✓  Brak wymagań serwerowych - tylko pliki statyczne
+
+
+🔧 BEZPŁATNE OPCJE HOSTINGU
+───────────────────────────────────────────────────────────────────────────
+  • GitHub Pages           - https://pages.github.com/
+  • Netlify                - https://www.netlify.com/
+  • Vercel                 - https://vercel.com/
+  • Cloudflare Pages       - https://pages.cloudflare.com/
+  • Firebase Hosting       - https://firebase.google.com/
+
+
+📄 LICENCJA
+───────────────────────────────────────────────────────────────────────────
+  © 2025 INOVIT - Wszystkie prawa zastrzeżone
+  Wersja: 1.0.1
+  Data wydania: 2025-11-09
+
+
+🆘 WSPARCIE
+───────────────────────────────────────────────────────────────────────────
+  Dokumentacja:
+    • README-WDROZENIE.txt - pełna instrukcja
+    • SZYBKI-START.txt - przewodnik startowy
+
+  Narzędzia deweloperskie (F12):
+    • Console - komunikaty błędów
+    • Application → Service Workers
+    • Application → Local Storage
+
+
+📞 KONTAKT
+───────────────────────────────────────────────────────────────────────────
+  W razie problemów sprawdź dokumentację lub konsulę przeglądarki.
+
+
+═══════════════════════════════════════════════════════════════════════════
+  GOTOWE DO WDROŻENIA! 🎉
+
+  Wypakuj → Uruchom → Testuj → Wdróż
+═══════════════════════════════════════════════════════════════════════════
